@@ -1,96 +1,40 @@
 <template>
-  <main class="content container">
-    <div class="content__top">
-      <div class="content__row">
-        <h1 class="content__title">Каталог</h1>
-        <span class="content__info"> 152 товара </span>
-      </div>
-    </div>
-
-    <div class="content__catalog">
-      <ProductFilter :price-from.sync="filterPriceFrom" :price-to.sync="filterPriceTo" :category-id.sync="filterCategoryId" :material-id.sync="filterMaterialId" :collectionId.sync="filterCollectionId"/>
-
-      <section class="catalog">
-        <ProductList :products="products"></ProductList>
-
-        <BasePagination :count="countProducts" v-model="page" :per-page="productsPerPage"></BasePagination>
-      </section>
-    </div>
-  </main>
+  <component :is="currentPageComponent" :page-params="currentPageParams"/>
 </template>
 
 <script>
-import products from "./data/products";
-import ProductList from "./components/ProductList.vue";
-import BasePagination from "./components/BasePagination.vue";
-import ProductFilter from "./components/ProductFilter.vue";
+  import MainPage from './pages/MainPage.vue';
+  import ProductPage from './pages/ProductPage.vue';
+  import NotFoundPage from './pages/NotFoundPage.vue';
+  import eventBus from './eventBus'
 
-export default {
-  components: { ProductList, BasePagination, ProductFilter },
-  name: "App",
-  data() {
-    return {
-      // products: products = products,
-      filterPriceFrom: 0,
-      filterPriceTo: 0,
-      filterCategoryId: 0,
-      filterMaterialId: [],
-      filterCollectionId: [],
+  const routes = {
+    main: 'MainPage',
+    product: 'ProductPage',
 
-      page: 1,
-      productsPerPage: 3,
-    };
-  },
-  computed: {
-    filteredProducts() {
-      let filteredProducts = products;
+  }
 
-      if (this.filterPriceFrom > 0) {
-        filteredProducts = filteredProducts.filter((product) => product.price > this.filterPriceFrom);
+  export default {
+    data() {
+      return {
+        currentPage: 'main',
+        currentPageParams: {}
       }
-      
-      if (this.filterPriceTo > 0) {
-        filteredProducts = filteredProducts.filter((product) => product.price < this.filterPriceTo);
-      }
-      if (this.filterCategoryId) {
-        filteredProducts = filteredProducts.filter((product) => product.categoryId === this.filterCategoryId);
-      }
-       if (this.filterMaterialId) {
-        // !!!!!!!!!
-        // for (let i=0; i<this.filterMaterialId.length; i++) {
-        //   filteredProducts = filteredProducts.filter((product) => {product.materialId === this.filterMaterialId[i];
-        //   console.log(product.materialId === this.filterMaterialId[i])}); 
-        // }
-
-        // for (let mat of this.filterMaterialId) {
-        //   console.log(mat)
-        //   console.log(filteredProducts)
-        //   filteredProducts = filteredProducts.filter((product) => {console.log(product.materialId === mat); product.materialId === mat; });
-        // }
-      }
-       if (this.filterColllectionId) {
-        // !!!!!!!!!
-        // for (let i=0; i<this.filterMaterialId.length; i++) {
-        //   filteredProducts = filteredProducts.filter((product) => {product.materialId === this.filterMaterialId[i];
-        //   console.log(product.materialId === this.filterMaterialId[i])}); 
-        // }
-
-        // for (let mat of this.filterMaterialId) {
-        //   console.log(mat)
-        //   console.log(filteredProducts)
-        //   filteredProducts = filteredProducts.filter((product) => {console.log(product.materialId === mat); product.materialId === mat; });
-        // }
-      }
-
-      return filteredProducts;
     },
-    products() {
-      const offset = (this.page - 1) * this.productsPerPage;
-      return this.filteredProducts.slice(offset, offset + this.productsPerPage);
+    methods: {
+      goToPage(pageName, pageParams) {
+        this.currentPage = pageName;
+        this.currentPageParams = pageParams || {};
+      }
     },
-    countProducts() {
-      return this.filteredProducts.length;
+    computed: {
+      currentPageComponent() {
+        return routes[this.currentPage] || 'NotFoundPage';
+      }
     },
-  },
-};
+    components: {MainPage, ProductPage, NotFoundPage},
+    created() {
+      eventBus.$on('gotoPage', (pageName, pageParams)=>this.goToPage(pageName, pageParams))
+    },
+  };
 </script>

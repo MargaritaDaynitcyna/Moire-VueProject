@@ -1,5 +1,6 @@
 export default [
     {
+        id: 1,
         title: '1Кружевной бюстгалтер без косточек',
         price: 3690,
         image: "img/product-1.jpg",
@@ -7,6 +8,7 @@ export default [
         materialId: 1,
     },
     {
+        id: 2,
         title: '2Кружевной бюстгалтер без косточек',
         price: 3690,
         image: "img/product-1.jpg",
@@ -14,6 +16,7 @@ export default [
         materialId: 2,
     },
     {
+        id: 3,
         title: '3Кружевной бюстгалтер без косточек',
         price: 3690,
         image: "img/product-1.jpg",
@@ -21,6 +24,7 @@ export default [
         materialId: 3,
     },
     {
+        id: 4,
         title: '4Кружевной бюстгалтер без косточек',
         price: 3690,
         image: "img/product-1.jpg",
@@ -28,6 +32,7 @@ export default [
         materialId: 4,
     },
     {
+        id: 5,
         title: '5Кружевной бюстгалтер без косточек',
         price: 3690,
         image: "img/product-1.jpg",
@@ -35,6 +40,7 @@ export default [
         materialId: 1,
     },
     {
+        id: 6,
         title: '6Кружевной бюстгалтер без косточек',
         price: 3690,
         image: "img/product-1.jpg",
@@ -42,6 +48,7 @@ export default [
         materialId: 2,
     },
     {
+        id: 7,
         title: '7Кружевной бюстгалтер без косточек',
         price: 3690,
         image: "img/product-1.jpg",
@@ -49,6 +56,7 @@ export default [
         materialId: 3,
     },
     {
+        id: 8,
         title: '8Кружевной бюстгалтер без косточек',
         price: 3690,
         image: "img/product-1.jpg",
@@ -56,6 +64,7 @@ export default [
         materialId: 4,
     },
     {
+        id: 9,
         title: '9Кружевной бюстгалтер без косточек',
         price: 3690,
         image: "img/product-1.jpg",
@@ -63,6 +72,7 @@ export default [
         materialId: 1,
     },
     {
+        id: 10,
         title: '10Кружевной бюстгалтер без косточек',
         price: 3690,
         image: "img/product-1.jpg",
