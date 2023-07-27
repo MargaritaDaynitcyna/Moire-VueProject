@@ -24,27 +24,53 @@
           </fieldset>
 
           <fieldset class="form__block">
+            <legend class="form__legend">Цвет</legend>
+            <ul class="check-list">          
+              <li class="check-list__item" v-for="color in colors" :key="color.id">
+                <label class="check-list__label">
+                  <input class="check-list__check sr-only" type="checkbox" name="colors" :value="color.id" v-model="currentColorId" >
+                  <span class="check-list__desc">
+                    {{ color.title }}
+                    <span class="colors__value" :style="{ backgroundColor: color.code }"></span>
+                    <!-- <span :style="{ backgroundColor: color }">({{ color.code }})</span> -->
+                  </span>
+                </label>
+              </li>
+            </ul>
+          </fieldset>
+
+      <!-- <fieldset class="form__block">
+        <legend class="form__legend">Цвет</legend>
+        <ul class="colors">
+          <li class="colors__item" v-for="color in colors" :key="color.id">
+            <label class="colors__label">
+              <input
+                class="colors__radio sr-only"
+                type="radio"
+                name="color"
+                :value="color.id"
+                v-model="currentColorId"
+              />
+              <span class="colors__value" :style="{ backgroundColor: color.code }">
+              </span>
+            </label>
+          </li>
+        </ul>
+      </fieldset> -->
+
+
+          <fieldset class="form__block">
             <legend class="form__legend">Материал</legend>
             <ul class="check-list">          
               <li class="check-list__item" v-for="material in materials" :key="material.id">
                 <label class="check-list__label">
                   <input class="check-list__check sr-only" type="checkbox" name="material" :value="material.id" v-model="currentMaterialId" >
                   <span class="check-list__desc">
-                    {{ material.title }} 
-                    <!-- !!!!! -->
-                    <span>(...)</span>
+                    {{ material.title }}
+                    <span>({{ material.productsCount }})</span>
                   </span>
                 </label>
               </li>
-              <!-- <li class="check-list__item">
-                <label class="check-list__label">
-                  <input class="check-list__check sr-only" type="checkbox" name="material" value="хлопок">
-                  <span class="check-list__desc">
-                    хлопок 
-                    <span>(46)</span>
-                  </span>
-                </label>
-              </li> -->
             </ul>
           </fieldset>
 
@@ -56,7 +82,7 @@
                   <input class="check-list__check sr-only" type="checkbox" name="collection" :value="collection.id" v-model="currentCollectionId">
                   <span class="check-list__desc">
                     {{ collection.title }} 
-                    <span>(...)</span>
+                    <span>({{ collection.productsCount }})</span>
                   </span>
                 </label>
               </li>
@@ -74,9 +100,11 @@
 </template>
 
 <script>
-    import categories from '../data/categories'
-    import materials from '../data/materials'
-    import collections from '../data/collections'
+    // import categories from '../data/categories'
+    // import materials from '../data/materials'
+    // import collections from '../data/collections'
+    import axios from 'axios';
+    import { API_BASE_URL } from '@/config.js';
 
     export default {
         data() {
@@ -84,20 +112,29 @@
                 currentPriceFrom : 0,
                 currentPriceTo : 0,
                 currentCategoryId : 0,
+                currentColorId: [],
                 currentMaterialId: [],
                 currentCollectionId: [],
+
+                categoriesData: [],
+                colorsData: [],
+                materialsData: [],
+                collectionsData: [],
             }
         },
-        props: ['priceFrom', 'priceTo', 'categoryId', 'materialId', 'collectionId'],
+        props: ['priceFrom', 'priceTo', 'categoryId', 'colorId', 'materialId', 'collectionId'],
         computed: {
             categories(){
-                return categories
+                return this.categoriesData ? this.categoriesData.items : []
+            },
+            colors(){
+                return this.colorsData ? this.colorsData.items : []
             },
              materials(){
-                return materials
+                return this.materialsData ? this.materialsData.items : []
             },
              collections(){
-                return collections
+                return this.collectionsData ? this.collectionsData.items : []
             },
             // currentMaterialId: {
             //   get() {
@@ -118,6 +155,9 @@
             categoryId(value) {
                 this.currentCategoryId = value;
             },
+            colorId(value) {
+                this.currentColorId = value;
+            },
             materialId(value) {
                 this.currentMaterialId = value;
             },
@@ -130,6 +170,7 @@
                 this.$emit('update:priceFrom', this.currentPriceFrom);
                 this.$emit('update:priceTo', this.currentPriceTo);
                 this.$emit('update:categoryId', this.currentCategoryId);
+                this.$emit('update:colorId', this.currentColorId);
                 this.$emit('update:materialId', this.currentMaterialId);
                 this.$emit('update:collectionId', this.currentCollectionId);
             },
@@ -137,9 +178,32 @@
                 this.$emit('update:priceFrom', 0);
                 this.$emit('update:priceTo', 0);
                 this.$emit('update:categoryId', 0);
+                this.$emit('update:colorId', []);
                 this.$emit('update:materialId', []);
                 this.$emit('update:collectionId', []);
-            }
-        }
+            },
+            loadCategories() {
+              axios.get(API_BASE_URL+'/api/productCategories')
+                .then(response => this.categoriesData = response.data)
+            },
+            loadColors() {
+              axios.get(API_BASE_URL+'/api/colors')
+                .then(response => this.colorsData = response.data)
+            },
+            loadMaterials() {
+              axios.get(API_BASE_URL+'/api/materials')
+                .then(response => this.materialsData = response.data)
+            },
+            loadCollections() {
+              axios.get(API_BASE_URL+'/api/seasons')
+                .then(response => this.collectionsData = response.data)
+            },
+        },
+        created() {
+          this.loadCategories();
+          this.loadColors();
+          this.loadMaterials();
+          this.loadCollections();
+        },
     }
 </script>
