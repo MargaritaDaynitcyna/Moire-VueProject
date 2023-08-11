@@ -90,10 +90,10 @@
                         class="colors__radio sr-only"
                         type="radio"
                         name="color-item"
-                        :value="color.color.id"
-                        checked=""
+                        :value="color.color.id"                        
                         v-model="productColor"
                       />
+                      <!-- checked="" -->
                       <span
                         class="colors__value"
                         :style="{ backgroundColor: color.color.code }"

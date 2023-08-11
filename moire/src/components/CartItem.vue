@@ -14,10 +14,17 @@
     <p class="product__info product__info--color">
       Цвет:
       <span>
-        <i style="background-color: #ff9b78"></i>
-        Персиковый
+        <i :style="{backgroundColor: item.product.colors[0].color.code}"></i>
+        {{  item.product.colors[0].color.title }}
       </span>
     </p>
+    <!-- <p class="product__info product__info--color">
+      Размер:
+      <span>
+        <i :style="{backgroundColor: item.product.colors[0].color.code}"></i>
+        {{  item.product.colors[0].color.title }}
+      </span>
+    </p> -->
     <span class="product__code"> Артикул: {{ item.product.id }} </span>
 
     <BasePlusMinus :amount.sync="amount" class="product__counter" />
