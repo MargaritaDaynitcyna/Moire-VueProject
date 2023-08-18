@@ -207,7 +207,7 @@ export default {
     return {
       productAmount: 1,
       productSize: 0,
-      productColor: 0,
+      // productColor: 0,
       //? заменить на вычисляемое свойство 5.1
       state: "info",
       productData: null,
@@ -235,6 +235,16 @@ export default {
       // );
       return this.productData.category;
     },
+    // productColor: {
+    //   get() {
+    //     return this.product.colors[0].color.id;
+    //   },
+    //   set(value) {
+    //     this.$store.commit("addProductToCart", {
+    //       color: value,
+    //     });
+    //   },
+    // }
   },
   methods: {
     // gotoPage,
