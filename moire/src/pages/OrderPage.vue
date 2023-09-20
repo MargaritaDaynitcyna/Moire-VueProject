@@ -57,7 +57,7 @@
 
           <div class="cart__options">
             <h3 class="cart__title">Доставка</h3>
-            <!-- <span class="form__error" v-if="formError.deliveryTypeId">{{ formError.deliveryTypeId }}</span> -->
+            {{ formData.deliveryTypeId }}
             <ul class="cart__options options">
               <li class="options__item" v-for="delivery of deliveries" :key="delivery.id">
                 <label class="options__label">
@@ -67,6 +67,7 @@
                   </span>
                 </label>
               </li>
+               <span class="form__error" v-if="formError.deliveryTypeId">{{ formError.deliveryTypeId }}</span>
               <!-- <li class="options__item">
                 <label class="options__label">
                   <input class="options__radio sr-only" type="radio" name="delivery" value="0" checked="">
@@ -78,7 +79,7 @@
             </ul>
 
             <h3 class="cart__title">Оплата</h3>
-            {{ formData.paymentTypeId }}
+            
             <ul class="cart__options options">
               <li class="options__item" v-for="payment of payments" :key="payment.id">
                 <label class="options__label">
@@ -88,6 +89,7 @@
                   </span>
                 </label>
               </li>
+               <span class="form__error" v-if="formError.paymentTypeId">{{ formError.paymentTypeId }}</span>
               <!-- <li class="options__item">
                 <label class="options__label">
                   <input class="options__radio sr-only" type="radio" name="pay" value="cash">
@@ -104,7 +106,7 @@
           <ul class="cart__orders">
             <li class="cart__order" v-for="product in products" :key="product.id">
               <h3>{{ product.product.title }}</h3>
-              <b>{{ product.product.price | numberFormat }} ₽</b>
+              <b>{{ (product.price * product.quantity) | numberFormat }} ₽</b>
               <span>Артикул: {{ product.product.id }}</span>
             </li>
             <!-- <li class="cart__order">
@@ -120,8 +122,8 @@
           </ul>
           
           <div class="cart__total">
-            <p>Доставка: <b>бесплатно</b></p>
-            <p>Итого: <b>3</b> товара на сумму <b>4 070 ₽</b></p>
+            <p>Доставка: <b>{{ deliveryPrice | numberFormat }} ₽</b></p>
+            <p>Итого: <b>{{ products.length }}</b> товара на сумму <b>{{ totalPrice | numberFormat }} ₽</b></p>
           </div>
 
           <button class="cart__button button button--primery" type="submit">
@@ -147,14 +149,15 @@ import BaseFormTextarea from '@/components/BaseFormTextarea.vue';
 import numberFormat from "@/helpers/numberFormat";
 import axios from 'axios';
 import { API_BASE_URL } from '@/config.js';
+import { mapGetters } from "vuex";
 // import { mapActions } from 'vuex';
 
 export default {
     data() {
         return {
             formData: {
-              // deliveryTypeId: 1,
-              // paymentTypeId:1,
+              deliveryTypeId: 1,
+              paymentTypeId: 0,
             },
             formError: {},
             formErrorMessage: '',
@@ -170,12 +173,18 @@ export default {
       deliveries() {
         return this.deliveriesData;
       },
+      deliveryPrice() {
+        return this.deliveries.find(del=>del.id===this.formData.deliveryTypeId).price;
+      },
       payments() {
         return this.paymentsData;
       },
       products() {
          return this.$store.state.cartProductsData
-      }
+      },
+      ...mapGetters({
+        totalPrice: "cartTotalPrice",
+      }),
     },
     methods: {
       loadDeliveries() {
@@ -185,7 +194,7 @@ export default {
           .get(API_BASE_URL+`/api/deliveries`)
           .then(response => {
             this.deliveriesData = response.data;
-            // this.loadPayments();
+            this.loadPayments();
             })
           // .catch(()=> this.productLoadingFailed = true)
           // .then(()=> this.productLoading = false)
@@ -198,7 +207,7 @@ export default {
           // !!!!!!!!!!!!!!!!!
           .get(API_BASE_URL+`/api/payments`, {
             params: {
-              deliveryTypeId: 1 || this.formData.deliveryTypeId
+              deliveryTypeId: this.formData.deliveryTypeId
             }
           })
           .then(response => this.paymentsData = response.data)
@@ -231,7 +240,7 @@ export default {
     },
   created() {
     this.loadDeliveries();
-    this.loadPayments();
+    // this.loadPayments();
   },
     
 }

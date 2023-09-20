@@ -1,21 +1,15 @@
 <template>
-      <main class="content container">
+  <main class="content container">
     <div class="content__top">
       <ul class="breadcrumbs">
         <li class="breadcrumbs__item">
-          <a class="breadcrumbs__link" href="index.html">
-            Каталог
-          </a>
+          <a class="breadcrumbs__link" href="index.html"> Каталог </a>
         </li>
         <li class="breadcrumbs__item">
-          <a class="breadcrumbs__link" href="cart.html">
-            Корзина
-          </a>
+          <a class="breadcrumbs__link" href="cart.html"> Корзина </a>
         </li>
         <li class="breadcrumbs__item">
-          <a class="breadcrumbs__link">
-            Оформление заказа
-          </a>
+          <a class="breadcrumbs__link"> Оформление заказа </a>
         </li>
       </ul>
 
@@ -28,49 +22,40 @@
       <form class="cart__form form" action="#" method="POST">
         <div class="cart__field">
           <p class="cart__message">
-            Благодарим за&nbsp;выбор нашего магазина. На&nbsp;Вашу почту придет письмо с&nbsp;деталями заказа. 
-            Наши менеджеры свяжутся с&nbsp;Вами в&nbsp;течение часа для уточнения деталей доставки.
+            Благодарим за&nbsp;выбор нашего магазина. На&nbsp;Вашу почту придет
+            письмо с&nbsp;деталями заказа. Наши менеджеры свяжутся с&nbsp;Вами
+            в&nbsp;течение часа для уточнения деталей доставки.
           </p>
 
           <ul class="dictionary">
             <li class="dictionary__item">
-              <span class="dictionary__key">
-                Получатель
-              </span>
+              <span class="dictionary__key"> Получатель </span>
               <span class="dictionary__value">
                 {{ orderInfo.name }}
               </span>
             </li>
             <li class="dictionary__item">
-              <span class="dictionary__key">
-                Адрес доставки
-              </span>
+              <span class="dictionary__key"> Адрес доставки </span>
               <span class="dictionary__value">
-                 {{ orderInfo.address }}
+                {{ orderInfo.address }}
               </span>
             </li>
             <li class="dictionary__item">
-              <span class="dictionary__key">
-                Телефон
-              </span>
+              <span class="dictionary__key"> Телефон </span>
               <span class="dictionary__value">
                 {{ orderInfo.phone }}
               </span>
             </li>
             <li class="dictionary__item">
-              <span class="dictionary__key">
-                Email
-              </span>
+              <span class="dictionary__key"> Email </span>
               <span class="dictionary__value">
-                 {{ orderInfo.email }}
+                {{ orderInfo.email }}
               </span>
             </li>
             <li class="dictionary__item">
-              <span class="dictionary__key">
-                Способ оплаты
-              </span>
+              <span class="dictionary__key"> Способ оплаты </span>
               <span class="dictionary__value">
-                 {{ orderInfo.paymentType }}
+                {{ orderInfo.paymentType }}
               </span>
             </li>
           </ul>
@@ -78,26 +63,24 @@
 
         <div class="cart__block">
           <ul class="cart__orders">
-            <li class="cart__order">
-              <h3>Смартфон Xiaomi Redmi Note 7 Pro 6/128GB</h3>
-              <b>990 ₽</b>
-              <span>Артикул: 150030</span>
-            </li>
-            <li class="cart__order">
-              <h3>Гироскутер Razor Hovertrax 2.0ii</h3>
-              <b>1 990 ₽</b>
-              <span>Артикул: 150030</span>
-            </li>
-            <li class="cart__order">
-              <h3>Электрический дрифт-карт Razor Lil’ Crazy</h3>
-              <b>4 090 ₽</b>
-              <span>Артикул: 150030</span>
+            <li class="cart__order" v-for="product in orderInfo.basket.items" :key="product.id">
+              <h3>{{ product.product.title }}</h3>
+              <b>{{ (product.price * product.quantity) | numberFormat }} ₽</b>
+              <span>Артикул: {{ product.product.id }}</span>
             </li>
           </ul>
-          
+
           <div class="cart__total">
-            <p>Доставка: <b> {{ orderInfo.deliveryType.title }},  {{ orderInfo.deliveryType.price | numberFormat }} ₽</b></p>
-            <p>Итого: <b> {{ orderInfo.basket.items.length }}</b> товара на сумму <b> {{ orderInfo.totalPrice | numberFormat }} ₽</b></p>
+            <p>
+              Доставка:
+              <b>
+                {{ orderInfo.deliveryType.price | numberFormat }} ₽</b
+              >
+            </p>
+            <p>
+              Итого: <b> {{ orderInfo.basket.items.length }}</b> товара на сумму
+              <b> {{ orderInfo.totalPrice | numberFormat }} ₽</b>
+            </p>
           </div>
         </div>
       </form>
@@ -106,24 +89,28 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
-import numberFormat from '@/helpers/numberFormat';
-
+import { mapActions } from "vuex";
+import numberFormat from "@/helpers/numberFormat";
 
 export default {
-    // ...mapActions(['loadOrderInfo']),
-    computed: {
-        orderInfo() {
-            return this.$store.state.orderInfo
-        }
-        // totalPrice: "cartTotalPrice",
-      },
-    creeated() {
-        if(this.$store.state.orderInfo && this.$store.state.orderInfo === this.$router.params.id) {
-            return;
-        }
-        this.$store.dispatch('loadOrderInfo', this.$router.params.id);
+  // ...mapActions(['loadOrderInfo']),
+  filters: {
+    numberFormat
+  },
+  computed: {
+    orderInfo() {
+      return this.$store.state.orderInfo;
+    },
+    // totalPrice: "cartTotalPrice",
+  },
+  creeated() {
+    if (
+      this.$store.state.orderInfo &&
+      this.$store.state.orderInfo === this.$router.params.id
+    ) {
+      return;
     }
-    
-}
+    this.$store.dispatch("loadOrderInfo", this.$router.params.id);
+  },
+};
 </script>

@@ -25,15 +25,16 @@
 
           <fieldset class="form__block">
             <legend class="form__legend">Цвет</legend>
-            <ul class="check-list">          
-              <li class="check-list__item" v-for="color in colors" :key="color.id">
-                <label class="check-list__label">
-                  <input class="check-list__check sr-only" type="checkbox" name="colors" :value="color.id" v-model="currentColorId" >
-                  <span class="check-list__desc">
-                    {{ color.title }}
-                    <span class="colors__value" :style="{ backgroundColor: color.code }"></span>
+            <ul class="check-list colors colors--black">          
+              <li class="colors__item" v-for="color in colors" :key="color.id">
+                <label class="colors__label">
+                  <input class="colors__check sr-only" type="checkbox" name="colors" :value="color.id" v-model="currentColorId" >
+                  <!-- <span class="check-list__desc">
+                    {{ color.title }} -->
+                    <span class="colors__value" :style="{ backgroundColor: color.code }">
+                    </span>
                     <!-- <span :style="{ backgroundColor: color }">({{ color.code }})</span> -->
-                  </span>
+                  <!-- </span> -->
                 </label>
               </li>
             </ul>

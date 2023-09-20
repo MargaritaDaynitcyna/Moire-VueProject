@@ -8,12 +8,12 @@
             </a>
           </li>
           <li class="pagination__item" v-for="pageNumber in pages" :key="pageNumber">
-            <a href="#" class="pagination__link" :class="{'pagination__link--current': pageNumber === page }" @click.prevent="paginate(pageNumber)">
+            <a class="pagination__link" :class="{'pagination__link--current': pageNumber === page }" @click.prevent="paginate(pageNumber)">
               {{ pageNumber }}
             </a>
           </li>
           <li class="pagination__item">
-            <a class="pagination__link pagination__link--arrow" :class="{'pagination__link--disabled': page === pages }" href="#" aria-label="Следующая страница" @click.prevent="paginate(page+1)">
+            <a class="pagination__link pagination__link--arrow" :class="{'pagination__link--disabled': page === pages }" aria-label="Следующая страница" @click.prevent="paginate(page+1)">
               <svg width="8" height="14" fill="currentColor">
                 <use xlink:href="#icon-arrow-right"></use>
               </svg>
@@ -34,7 +34,6 @@ export default {
             if (page >= 1 && page <= this.pages) {
                 this.$emit('paginate', page);
             }
-
         }
     },
     computed: {

@@ -24,6 +24,18 @@
         <div v-if="productsLoading">loading . . . </div>
         <div v-if="productsLoadingFailed">ERROR . . .<button @click.prevent="loadProducts()">! reload !</button> </div>
 
+      <div class="catalog__quantity quantity">
+        <span class="quantity__text">
+          Показывать товаров по 
+        </span>
+        <select class="quantity__selcect" name="" id="" v-model.number="productsPerPage">
+          <option value="3">3</option>
+          <option value="6">6</option>
+          <option value="9">9</option>
+          <option value="12">12</option>
+        </select>
+      </div>
+
 
         <ProductList :products="products"></ProductList>
 
@@ -32,6 +44,9 @@
           v-model="page"
           :per-page="productsPerPage"
         ></BasePagination>
+
+
+     
       </section>
     </div>
   </main>
@@ -122,7 +137,7 @@ export default {
       return this.productsData ? this.productsData.items.map((product) => {
           return {
             ...product,
-            image: product.colors[0].gallery[0].file.url,
+            // image: product.colors[0].gallery[0].file.url,
           }
         }) : [];
     },
@@ -160,6 +175,9 @@ export default {
   },
   watch: {
     page() {
+      this.loadProducts();
+    },
+    productsPerPage() {
       this.loadProducts();
     },
     filterCategoryId() {

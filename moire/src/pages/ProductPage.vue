@@ -25,11 +25,11 @@
 
     <section class="item">
       <div class="item__pics pics">
-        <div class="pics__wrapper" v-for="color in product.colors" :key="color.id">
+        <div class="pics__wrapper">
           <img
             width="570"
             height="570"
-            :src="color.gallery[0].file.url"
+            :src="srcImage"
             :alt="product.title"
           />
         </div>
@@ -83,17 +83,17 @@
             <div class="item__row">
               <fieldset class="form__block">
                 <legend class="form__legend">Цвет</legend>
-                <ul class="colors colors--black">
-                  <li class="colors__item" v-for="color in product.colors" :key="color.color.id">
+                <BaseColorInput :colors="product.colors" :check.sync="productColor"/>
+                <!-- <ul class="colors colors--black">
+                  <li class="colors__item" v-for="color in product.colors" :key="color.id">
                     <label class="colors__label">
                       <input
                         class="colors__radio sr-only"
                         type="radio"
                         name="color-item"
-                        :value="color.color.id"                        
+                        :value="color.id"                        
                         v-model="productColor"
                       />
-                      <!-- checked="" -->
                       <span
                         class="colors__value"
                         :style="{ backgroundColor: color.color.code }"
@@ -101,7 +101,7 @@
                       </span>
                     </label>
                   </li>
-                </ul>
+                </ul> -->
               </fieldset>
 
               <fieldset class="form__block">
@@ -112,6 +112,7 @@
                   </select>
                 </label>
               </fieldset>
+              <!-- <BaseSize :product="product" :size.sync="productSize"/> -->
             </div>
 
             <button class="item__button button button--primery" type="submit" :disabled="productAddSending">
@@ -197,6 +198,8 @@
 // import categories from "@/data/categories";
 // import gotoPage from "@/helpers/gotoPage";
 import BasePlusMinus from "@/components/BasePlusMinus";
+import BaseColorInput from "@/components/BaseColorInput";
+
 import numberFormat from "@/helpers/numberFormat";
 import axios from 'axios';
 import { API_BASE_URL } from '@/config.js';
@@ -207,7 +210,7 @@ export default {
     return {
       productAmount: 1,
       productSize: 0,
-      // productColor: 0,
+      productColor: 0,
       //? заменить на вычисляемое свойство 5.1
       state: "info",
       productData: null,
@@ -216,10 +219,12 @@ export default {
 
       productAdded:false,
       productAddSending:false,
+      // productColor: this.productData.colors[0].id,
+
     };
   },
   // props: ['pageParams'], = .$route.params.
-  components: { BasePlusMinus },
+  components: { BasePlusMinus, BaseColorInput },
   filters: {
     numberFormat,
   },
@@ -237,14 +242,33 @@ export default {
     },
     // productColor: {
     //   get() {
-    //     return this.product.colors[0].color.id;
+    //     return this.product.colors[0].id;
     //   },
     //   set(value) {
-    //     this.$store.commit("addProductToCart", {
-    //       color: value,
-    //     });
+    //     // this.$store.commit("addProductToCart", {
+    //     //   color: value,
+    //     // });
+    //     console.log(value);
+    //     return value;
+        
     //   },
-    // }
+    // },
+          // productColor() {
+          //   console.log(this.productData);
+          //   console.log(this.product);
+
+          //   this.productData.colors[0].id
+          //   },
+    productColorId() {
+      return this.product.colors.find((color) => color.id === this.productColor).color.id;
+    },
+    srcImage() {
+      return this.product.colors.find((color) => color.id === this.productColor)
+        .gallery
+        ? this.product.colors.find((color) => color.id === this.productColor)
+            .gallery[0].file.url
+        : "";
+    },
   },
   methods: {
     // gotoPage,
@@ -255,7 +279,7 @@ export default {
       this.productAddSending = true;
       this.addProductToCart({
         productId: this.product.id,
-        color: this.productColor,
+        color: this.productColorId,
         size: this.productSize,
         amount: this.productAmount,
       })
@@ -278,7 +302,9 @@ export default {
       this.loadProductTimer = setTimeout(()=> {
         axios
         .get(API_BASE_URL+`/api/products/${+this.$route.params.id}`)
-        .then(response => this.productData = response.data)
+        .then(response => {this.productData = response.data;
+        this.productSize = response.data.sizes[0].id;
+        this.productColor = response.data.colors[0].id})
         .catch(()=> this.productLoadingFailed = true)
         .then(()=> this.productLoading = false)
       }, 100);
@@ -293,7 +319,10 @@ export default {
         this.loadProduct();
       },
       imediate: true
-    }
+    },
+    // productColor: function() {
+    //   console.log(this.productColor)
+    // },
   }
 };
 </script>

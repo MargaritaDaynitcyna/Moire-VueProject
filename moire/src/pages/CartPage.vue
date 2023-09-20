@@ -3,6 +3,7 @@
     <div class="content__top">
       <ul class="breadcrumbs">
         <li class="breadcrumbs__item">
+          <!-- router link -->
           <a class="breadcrumbs__link" href="index.html"> Каталог </a>
         </li>
         <li class="breadcrumbs__item">

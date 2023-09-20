@@ -2,7 +2,7 @@
   <li class="cart__item product">
     <div class="product__pic">
       <img
-        :src="item.product.image"
+        :src="item.image"
         width="120"
         height="120"
         :alt="item.product.title"
@@ -11,13 +11,21 @@
     <h3 class="product__title">
       {{ item.product.title }}
     </h3>
-    <p class="product__info product__info--color">
-      Цвет:
-      <span>
-        <i :style="{backgroundColor: item.product.colors[0].color.code}"></i>
-        {{  item.product.colors[0].color.title }}
-      </span>
-    </p>
+    <div class="product__info">
+          <p class="product__info--color">
+          Цвет:
+          <span>
+            <i :style="{backgroundColor: item.color.code}"></i>
+            {{  item.color.title }}
+          </span>
+        </p>
+        <p class="product__info--size">
+          Размер: 
+          <span>
+            {{  item.size.title }}
+          </span>
+        </p>
+    </div>
     <!-- <p class="product__info product__info--color">
       Размер:
       <span>
@@ -37,7 +45,7 @@
       class="product__del button-del"
       type="button"
       aria-label="Удалить товар из корзины"
-      @click.prevent="deleteProduct(item.productId)"
+      @click.prevent="deleteProduct"
     >
       <svg width="20" height="20" fill="currentColor">
         <use xlink:href="#icon-close"></use>
@@ -49,7 +57,7 @@
 <script>
 import BasePlusMinus from "@/components/BasePlusMinus";
 import numberFormat from "@/helpers/numberFormat";
-import { mapMutations } from "vuex";
+import { mapActions } from "vuex";
 
 export default {
   props: ["item"],
@@ -65,17 +73,42 @@ export default {
       set(value) {
         this.$store.commit("updateCartProductAmount", {
           productId: this.item.productId,
+          // productId: this.item.idInCart,
           amount: value,
         });
       },
     },
   },
-  methods: {
-    ...mapMutations({ deleteProduct: "deleteCartProduct" }),
+  // methods: {
+    // ...mapMutations({ deleteProduct: "deleteCartProduct" }),
 
     // deleteProduct(productId) {
     //   this.$store.commit('deleteCartProduct', productId)
     // }
-  },
+
+     methods: {
+    // gotoPage,
+      ...mapActions(['deleteCartProduct']),
+
+      deleteProduct() {
+        // console.log(this.item.idInCart)
+        // this.productAdded = false;
+        // this.productAddSending = true;
+        this.deleteCartProduct({
+          productId: this.item.idInCart
+        })
+        // .then(()=>{
+        //   // this.productAdded = true;
+        //   // this.productAddSending = false;
+        // });
+        // this.$store.commit("addProductToCart", {
+        //   productId: this.product.id,
+        //   amount: this.productAmount,
+        //   size: this.productSize,
+        //   color: this.productColor,
+        // });
+      },
+    },
+  // },
 };
 </script>
