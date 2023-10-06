@@ -23,10 +23,6 @@
 <script>
 export default {
     props: ["colors", "check"],
-// model: {
-//     prop: 'check',
-//     event: 'change'
-//   },
   computed: {
             currentCheck: {
               get() {

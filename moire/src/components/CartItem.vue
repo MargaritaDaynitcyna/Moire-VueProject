@@ -101,7 +101,7 @@ export default {
         // this.productAddSending = true;
         console.log(basketItemId)
         this.deleteCartProduct({
-          basketItemId,
+          basketItemId: basketItemId,
         })
         // .then(()=>{
         //   // this.productAdded = true;
