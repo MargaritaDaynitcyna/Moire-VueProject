@@ -20,24 +20,28 @@
       />
 
       <section class="catalog">
-
-        <div v-if="productsLoading">loading . . . </div>
-        <div v-if="productsLoadingFailed">ERROR . . .<button @click.prevent="loadProducts()">! reload !</button> </div>
+        <BasePreloader v-if="productsLoading"></BasePreloader>
+        <div v-if="productsLoadingFailed">Что-то пошло не так... 
+          <button @click.prevent="loadProducts()" class="filter__reset button button--second">
+              ПЕРЕЗАГРУЗИТЬ
+          </button>
+        </div>
 
       <div class="catalog__quantity quantity">
         <span class="quantity__text">
           Показывать товаров по 
         </span>
         <select class="quantity__selcect" name="" id="" v-model.number="productsPerPage">
-          <option value="3">3</option>
+          <!-- <option value="3">3</option> -->
           <option value="6">6</option>
           <option value="9">9</option>
           <option value="12">12</option>
+          <option value="18">18</option>
         </select>
       </div>
 
 
-        <ProductList :products="products"></ProductList>
+        <ProductList :products="products" :class="{'catalog--disabled': productsLoading }"></ProductList>
 
         <BasePagination
           :count="countProducts"
@@ -56,13 +60,14 @@
 // import products from "@/data/products";
 import ProductList from "@/components/ProductList.vue";
 import BasePagination from "@/components/BasePagination.vue";
+import BasePreloader from "@/components/BasePreloader.vue";
 import ProductFilter from "@/components/ProductFilter.vue";
 import axios from 'axios';
 import { API_BASE_URL } from '@/config.js';
 
 
 export default {
-  components: { ProductList, BasePagination, ProductFilter },
+  components: { ProductList, BasePagination, ProductFilter, BasePreloader },
   data() {
     return {
       // products: products = products,
@@ -74,7 +79,7 @@ export default {
       filterCollectionId: [],
 
       page: 1,
-      productsPerPage: 3,
+      productsPerPage: 6,
 
       productsData: null,
 

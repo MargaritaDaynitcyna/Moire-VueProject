@@ -15,8 +15,8 @@
           <p class="product__info--color">
           Цвет:
           <span>
-            <i :style="{backgroundColor: item.color.code}"></i>
-            {{  item.color.title }}
+            <i :style="{backgroundColor: item.color.color.code}"></i>
+            {{  item.color.color.title }}
           </span>
         </p>
         <p class="product__info--size">
@@ -45,7 +45,7 @@
       class="product__del button-del"
       type="button"
       aria-label="Удалить товар из корзины"
-      @click.prevent="deleteProduct"
+      @click.prevent="deleteProduct(item.basketItemId)"
     >
       <svg width="20" height="20" fill="currentColor">
         <use xlink:href="#icon-close"></use>
@@ -57,7 +57,7 @@
 <script>
 import BasePlusMinus from "@/components/BasePlusMinus";
 import numberFormat from "@/helpers/numberFormat";
-import { mapActions } from "vuex";
+import { mapActions, mapMutations } from "vuex";
 
 export default {
   props: ["item"],
@@ -71,8 +71,8 @@ export default {
         return this.item.amount;
       },
       set(value) {
-        this.$store.commit("updateCartProductAmount", {
-          productId: this.item.productId,
+        this.$store.dispatch("updateCartProductAmount", {
+          basketItemId: this.item.basketItemId,
           // productId: this.item.idInCart,
           amount: value,
         });
@@ -80,22 +80,28 @@ export default {
     },
   },
   // methods: {
-    // ...mapMutations({ deleteProduct: "deleteCartProduct" }),
+  //   ...mapMutations({ deleteProduct: "deleteCartProduct" }),
 
-    // deleteProduct(productId) {
-    //   this.$store.commit('deleteCartProduct', productId)
-    // }
+  //   deleteProduct(productId) {
+  //     this.$store.commit('deleteCartProduct', productId)
+  //   }
 
      methods: {
     // gotoPage,
+    //   ...mapMutations({ deleteProduct: "deleteCartProduct" }),
+
+    // deleteProduct(basketItemId) {
+    //   this.$store.commit('deleteCartProduct', basketItemId)
+    // }
       ...mapActions(['deleteCartProduct']),
 
-      deleteProduct() {
+      deleteProduct(basketItemId) {
         // console.log(this.item.idInCart)
         // this.productAdded = false;
         // this.productAddSending = true;
+        console.log(basketItemId)
         this.deleteCartProduct({
-          productId: this.item.idInCart
+          basketItemId,
         })
         // .then(()=>{
         //   // this.productAdded = true;

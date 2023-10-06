@@ -1,5 +1,7 @@
 <template>
-  <div v-if="productLoading">loading...</div>
+  <div class="product__preloader"  v-if="productLoading">
+    <BasePreloader></BasePreloader>
+  </div>
   <div v-else-if="!productData"> ERROR...</div>
 
   <main class="content container" v-else>
@@ -16,9 +18,9 @@
           </router-link>
         </li>
         <li class="breadcrumbs__item">
-          <a class="breadcrumbs__link">
+          <span class="breadcrumbs__link">
             {{ product.title }}
-          </a>
+          </span>
         </li>
       </ul>
     </div>
@@ -83,6 +85,7 @@
             <div class="item__row">
               <fieldset class="form__block">
                 <legend class="form__legend">Цвет</legend>
+                <!-- <BaseColorInput :colors="product.colors" v-model="productColor"/> -->
                 <BaseColorInput :colors="product.colors" :check.sync="productColor"/>
                 <!-- <ul class="colors colors--black">
                   <li class="colors__item" v-for="color in product.colors" :key="color.id">
@@ -118,12 +121,15 @@
             <button class="item__button button button--primery" type="submit" :disabled="productAddSending">
               В корзину
             </button>
+
+            <div class="added" v-show="productAdded">Добавлено!</div>
+            <div class="added" v-show="productAddSending">Товар добавляется в корзину...</div>
+
           </form>
         </div>
       </div>
 
-      <div v-show="productAdded">product add to cart</div>
-      <div v-show="productAddSending">addind...</div>
+      
 
 
       <div class="item__desc">
@@ -199,6 +205,7 @@
 // import gotoPage from "@/helpers/gotoPage";
 import BasePlusMinus from "@/components/BasePlusMinus";
 import BaseColorInput from "@/components/BaseColorInput";
+import BasePreloader from "@/components/BasePreloader.vue";
 
 import numberFormat from "@/helpers/numberFormat";
 import axios from 'axios';
@@ -224,7 +231,7 @@ export default {
     };
   },
   // props: ['pageParams'], = .$route.params.
-  components: { BasePlusMinus, BaseColorInput },
+  components: { BasePlusMinus, BaseColorInput, BasePreloader },
   filters: {
     numberFormat,
   },
@@ -278,10 +285,10 @@ export default {
       this.productAdded = false;
       this.productAddSending = true;
       this.addProductToCart({
-        productId: this.product.id,
-        color: this.productColorId,
-        size: this.productSize,
-        amount: this.productAmount,
+        productId: (this.product.id).toString(),
+        colorId: (this.productColorId).toString(),
+        sizeId: (this.productSize).toString(),
+        quantity: (this.productAmount).toString(),
       })
       .then(()=>{
         this.productAdded = true;

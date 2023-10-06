@@ -16,11 +16,13 @@
 
     <span class="catalog__price"> {{ product.price | numberFormat }} ₽ </span>
     
-    <!-- <BaseColorInput :colors="product.colors" :checked.sync="colorItem"/> -->
+    <BaseColorInput :colors="product.colors" :check.sync="colorItem"/>
 
-   <ul class="colors colors--black">
-      <li class="colors__item" v-for="color in product.colors" :key="color.id">
-        <label class="colors__label">
+   <!-- <ul class="colors colors--black">
+      <li class="colors__item" v-for="color in product.colors" :key="color.id"> -->
+        <!-- <BaseColorInput :color="color" :check.sync="colorItem"/> -->
+
+        <!-- <label class="colors__label">
           <input
             class="colors__radio sr-only"
             type="radio"
@@ -32,22 +34,9 @@
             :style="{ backgroundColor: color.color.code }"
           >
           </span>
-        </label>
-      </li>
-     <!-- <li class="colors__item">
-          <label class="colors__label">
-            <input class="colors__radio sr-only" type="radio" value="#8BE000" v-model="color"/>
-            <span class="colors__value" style="background-color: #8be000">
-            </span>
-          </label>
-        </li>
-        <li class="colors__item">
-          <label class="colors__label">
-            <input class="colors__radio sr-only" type="radio" value="#222" v-model="color"/>
-            <span class="colors__value" style="background-color: #222"> </span>
-          </label>
-        </li> -->
-    </ul> 
+        </label> -->
+      <!-- </li>
+    </ul>  -->
   </div>
 </template>
 
@@ -66,6 +55,7 @@ export default {
   },
   computed: {
     srcImage() {
+      console.log(this.colorItem)
       return this.product.colors.find((color) => color.id === this.colorItem)
         .gallery
         ? this.product.colors.find((color) => color.id === this.colorItem)

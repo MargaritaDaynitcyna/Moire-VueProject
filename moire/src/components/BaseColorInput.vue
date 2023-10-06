@@ -7,8 +7,7 @@
           type="radio"
           name="color-item"
           :value="color.id"
-          v-model="check"
-          @change="ch"
+          v-model="currentCheck"
         />
         <span
           class="colors__value"
@@ -20,13 +19,36 @@
   </ul>
 </template>
 
+
 <script>
 export default {
     props: ["colors", "check"],
 // model: {
-//     prop: 'checked',
+//     prop: 'check',
 //     event: 'change'
 //   },
+  computed: {
+            currentCheck: {
+              get() {
+                return this.check;
+              },
+              set(value) {
+                console.log(this.check)
+                this.$emit('update:check', value);
+              }
+            }
+  },
+  //  watch: {
+  //           check(value) {
+  //               this.currentCheck = value;
+  //           },
+  //  },
+//   data () {
+//   return {
+//       // hoverLocal: this.check
+//       currentCheck: 0
+//   }
+// },
   // props: {
   //   checked: Boolean
   // },
@@ -38,11 +60,14 @@ export default {
   //   // productSize: this.product.sizes[0].id,
   // };
   //   },
-    methods: {
-      ch() {
-        // this.$emit("update:pr", this.pr);
-        this.$emit('change', this.check)
-      }
-    },
+    // methods: {
+    //   ch(check) {
+    //     // this.$emit("update:pr", this.pr);
+    //     // this.$emit('change', this.check)
+    //     this.$emit('change', check)
+
+    //   }
+    // },
 };
+// 
 </script>

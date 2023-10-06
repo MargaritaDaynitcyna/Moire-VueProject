@@ -35,16 +35,19 @@ export default new Vuex.Store({
             state.cartProductsData = [];
         },
         updateCartProductAmount(state, {
-            productId,
+            basketItemId,
             amount
         }) {
-            const item = state.cartProducts.find(item => item.productId === productId);
+            const item = state.cartProducts.find(item => item.basketItemId === basketItemId);
             if (item) {
                 item.amount = amount;
             }
         },
-        deleteCartProduct(state, productId) {
-            state.cartProducts = state.cartProducts.filter(item => item.productId !== productId)
+        // deleteCartProduct(state, productId) {
+        //     state.cartProducts = state.cartProducts.filter(item => item.productId !== productId)
+        // },
+        deleteCartProduct(state, basketItemId) {
+            state.cartProducts = state.cartProducts.filter(item => item.basketItemId !== basketItemId)
         },
         updateUserAccessKey(state, accessKey) {
             state.userAccessKey = accessKey;
@@ -57,6 +60,9 @@ export default new Vuex.Store({
                 return {
                     productId: item.product.id,
                     amount: item.quantity,
+                    basketItemId: item.id,
+                    size: item.size,
+                    color: item.color,
                 }
             })
         }
@@ -65,21 +71,23 @@ export default new Vuex.Store({
     getters: {
         cartDetailProducts(state) {
             return state.cartProducts.map(item => {
-                const product = state.cartProductsData.find(p => p.product.id === item.productId).product;
-                const image = state.cartProductsData.find(p => p.product.id === item.productId).color.gallery[0].file.url;
-                const color = state.cartProductsData.find(p => p.product.id === item.productId).color.color;
-                const size = state.cartProductsData.find(p => p.product.id === item.productId).size;
-                const idInCart = state.cartProductsData.find(p => p.product.id === item.productId).id;
+                // const product = state.cartProductsData.find(p => p.product.id === item.productId).product;
+                // const image = state.cartProductsData.find(p => p.product.id === item.productId).color.gallery[0].file.url;
+                // const color = state.cartProductsData.find(p => p.product.id === item.productId).color.color;
+                // const size = state.cartProductsData.find(p => p.product.id === item.productId).size;
+                // const idInCart = state.cartProductsData.find(p => p.product.id === item.productId).id;
+                // const basketItemId = item.basketItemId.toString();
 
 
-
+                // переписать короче с двоеточием 
                 return {
                     ...item,
-                    product,
-                    image,
-                    color,
-                    size,
-                    idInCart,
+                    product: state.cartProductsData.find(p => p.product.id === item.productId).product,
+                    image: item.color.gallery[0].file.url,
+                    // color,
+                    // size,
+                    // idInCart,
+                    // basketItemId,
                     // product: {
                     //     ...product,
                         // image: product.colors[0].gallery[0].file.url,
@@ -124,16 +132,17 @@ export default new Vuex.Store({
         },
         addProductToCart(context, {
             productId,
-            color,
-            size,
-            amount
+            colorId,
+            sizeId,
+            quantity
         }) {
             // promise ?
             return axios.post(API_BASE_URL + '/api/baskets/products', {
+                // убрать повторение
                     productId: productId,
-                    colorId: color,
-                    sizeId: size,
-                    quantity: amount,
+                    colorId: colorId,
+                    sizeId: sizeId,
+                    quantity: quantity,
                 }, {
                     params: {
                         userAccessKey: context.state.userAccessKey,
@@ -143,30 +152,26 @@ export default new Vuex.Store({
                         context.commit('updateCartProductsData', response.data.items)
                         context.commit('syncCartProducts')
                     }
-
                 )
-
         },
-        deleteCartProduct(context, productId) {
-            console.log(productId)
-            console.log(`${productId.productId}`)
+        deleteCartProduct(context, basketItemId) {
+            console.log(basketItemId)
             console.log(context.state.userAccessKey)
 
-            // context.commit('deleteCartProduct', {basketItemId});
-            axios.delete(API_BASE_URL + '/api/baskets/products?userAccessKey=8d1b16cf761f63adfed87ba40c5ba528', {
-                // basketItemId: `${productId.productId}`,
-                basketItemId: '19856',
+            context.commit('deleteCartProduct', basketItemId);
+            axios.delete(API_BASE_URL + '/api/baskets/products', {
+                basketItemId: basketItemId,
             }, {
-                // params: {
-                //     userAccessKey: context.state.userAccessKey,
-                // }
+                params: {
+                    userAccessKey: "acaba31d298ac8fd22ddefaef760fe84",
+                }
             })
-        //     .then(response => {
-        //         context.commit('updateCartProductsData', response.data.items)
-        //         context.commit('syncCartProducts')
-        //     }
-
-        // )
+            .then(response => {
+                context.commit('updateCartProductsData', response.data.items)
+            })
+            .catch(() => {
+                context.commit('syncCartProducts')
+            })
         },
         updateCartProductAmount(context, {basketItemId,amount}) {
             context.commit('updateCartProductAmount', {basketItemId,amount});

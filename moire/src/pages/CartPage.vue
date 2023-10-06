@@ -3,17 +3,16 @@
     <div class="content__top">
       <ul class="breadcrumbs">
         <li class="breadcrumbs__item">
-          <!-- router link -->
-          <a class="breadcrumbs__link" href="index.html"> Каталог </a>
+          <router-link class="breadcrumbs__link" :to="{ name: 'main' }"> Каталог </router-link>
         </li>
         <li class="breadcrumbs__item">
-          <a class="breadcrumbs__link"> Корзина </a>
+          <span class="breadcrumbs__link"> Корзина </span>
         </li>
       </ul>
 
       <div class="content__row">
         <h1 class="content__title">Корзина</h1>
-        <span class="content__info"> {{ products.length }} товара </span>
+        <span class="content__info"> {{ products.length }} товара/ов </span>
       </div>
     </div>
 
@@ -23,7 +22,7 @@
           <ul class="cart__list">
             <CartItem
               v-for="item in products"
-              :key="item.productId"
+              :key="item.basketItemId"
               :item="item"
             />
           </ul>

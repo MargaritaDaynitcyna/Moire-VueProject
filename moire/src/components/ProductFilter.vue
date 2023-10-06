@@ -93,7 +93,7 @@
           <button class="filter__submit button button--primery" type="submit">
             Применить
           </button>
-          <button class="filter__reset button button--second" type="button" @click.prevent="reset">
+          <button class="filter__reset button button--second" type="button" @click.prevent="reset" :class="{'button--second--disabled': parameters }">
             Сбросить
           </button>
         </form>
@@ -145,6 +145,9 @@
             //     this.$emit('update:materialId', value);
             //   }
             // }
+            parameters() {
+              return true ? (this.currentPriceFrom === 0 && this.currentPriceTo === 0 && this.currentCategoryId === 0 && this.currentColorId.length === 0 && this.currentMaterialId.length === 0 && this.currentCollectionId.length === 0 ) : false; 
+            },
         },
         watch: {
             priceFrom(value) {

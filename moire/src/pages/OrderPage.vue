@@ -13,9 +13,9 @@
           </router-link>
         </li>
         <li class="breadcrumbs__item">
-          <a class="breadcrumbs__link">
+          <span class="breadcrumbs__link">
             Оформление заказа
-          </a>
+          </span>
         </li>
       </ul>
 
@@ -105,7 +105,10 @@
         <div class="cart__block">
           <ul class="cart__orders">
             <li class="cart__order" v-for="product in products" :key="product.id">
-              <h3>{{ product.product.title }}</h3>
+              <div>
+                <h3>{{ product.product.title }}</h3>
+                <p><span>{{ product.size.title }}</span>, <span :style="{ color: product.color.color.code }">{{ product.color.color.title }}</span></p>
+              </div>
               <b>{{ (product.price * product.quantity) | numberFormat }} ₽</b>
               <span>Артикул: {{ product.product.id }}</span>
             </li>

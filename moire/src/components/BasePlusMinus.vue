@@ -1,6 +1,6 @@
 <template>
   <div class="product__counter form__counter">
-    <button type="button" aria-label="Убрать один товар" @click.prevent="minus">
+    <button type="button" aria-label="Убрать один товар" @click.prevent="minus" :class="{'button--disabled': amount === 1 }">
       <svg width="10" height="10" fill="currentColor">
         <use xlink:href="#icon-minus"></use>
       </svg>
