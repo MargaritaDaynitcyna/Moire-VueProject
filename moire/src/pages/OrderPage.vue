@@ -159,8 +159,8 @@ export default {
     data() {
         return {
             formData: {
-              deliveryTypeId: 1,
-              paymentTypeId: 0,
+              deliveryTypeId: 0,
+              // paymentTypeId: 0,
             },
             formError: {},
             formErrorMessage: '',
@@ -177,7 +177,7 @@ export default {
         return this.deliveriesData;
       },
       deliveryPrice() {
-        return this.deliveries.find(del=>del.id===this.formData.deliveryTypeId).price;
+        // return this.deliveries.find(del=>del.id===this.formData.deliveryTypeId).price;
       },
       payments() {
         return this.paymentsData;
@@ -205,6 +205,7 @@ export default {
       },    
       loadPayments() {
         clearTimeout(this.loadPaymentsTimer);
+        console.log(900)
         this.loadPaymentsTimer = setTimeout(()=> {
           axios
           // !!!!!!!!!!!!!!!!!
@@ -245,6 +246,11 @@ export default {
     this.loadDeliveries();
     // this.loadPayments();
   },
+   watch: {
+    deliveryTypeId() {
+      this.loadPayments();
+    },
+   }
     
 }
 </script>

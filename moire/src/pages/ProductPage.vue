@@ -87,6 +87,7 @@
                 <legend class="form__legend">Цвет</legend>
                 <!-- <BaseColorInput :colors="product.colors" v-model="productColor"/> -->
                 <BaseColorInput :colors="product.colors" :check.sync="productColor"/>
+                
                 <!-- <ul class="colors colors--black">
                   <li class="colors__item" v-for="color in product.colors" :key="color.id">
                     <label class="colors__label">
@@ -285,10 +286,10 @@ export default {
       this.productAdded = false;
       this.productAddSending = true;
       this.addProductToCart({
-        productId: (this.product.id).toString(),
-        colorId: (this.productColorId).toString(),
-        sizeId: (this.productSize).toString(),
-        quantity: (this.productAmount).toString(),
+        productId: this.product.id,
+        colorId: this.productColorId,
+        sizeId: this.productSize,
+        quantity: this.productAmount,
       })
       .then(()=>{
         this.productAdded = true;
