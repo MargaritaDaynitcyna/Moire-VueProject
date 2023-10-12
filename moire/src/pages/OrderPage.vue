@@ -57,7 +57,6 @@
 
           <div class="cart__options">
             <h3 class="cart__title">Доставка</h3>
-            {{ formData.deliveryTypeId }}
             <ul class="cart__options options">
               <li class="options__item" v-for="delivery of deliveries" :key="delivery.id">
                 <label class="options__label">
@@ -79,8 +78,7 @@
             </ul>
 
             <h3 class="cart__title">Оплата</h3>
-            
-            <ul class="cart__options options">
+            <ul v-if="deliverySelected" class="cart__options options">
               <li class="options__item" v-for="payment of payments" :key="payment.id">
                 <label class="options__label">
                   <input class="options__radio sr-only" type="radio" name="pay" :value="payment.id" v-model="formData.paymentTypeId">
@@ -99,10 +97,12 @@
                 </label>
               </li> -->
             </ul>
+            <p v-else>Способы оплаты появятся после выбора типа доставки</p>            
           </div>
         </div>
 
         <div class="cart__block">
+          <BasePreloader v-if="orderSending"></BasePreloader>
           <ul class="cart__orders">
             <li class="cart__order" v-for="product in products" :key="product.id">
               <div>
@@ -125,7 +125,7 @@
           </ul>
           
           <div class="cart__total">
-            <p>Доставка: <b>{{ deliveryPrice | numberFormat }} ₽</b></p>
+            <p>Доставка: <b v-if="deliverySelected">{{ deliveryPrice | numberFormat }} ₽</b></p>
             <p>Итого: <b>{{ products.length }}</b> товара на сумму <b>{{ totalPrice | numberFormat }} ₽</b></p>
           </div>
 
@@ -148,6 +148,7 @@
 // import BaseFormField from '@/components/BaseFormField.vue'
 import BaseFormText from '@/components/BaseFormText.vue';
 import BaseFormTextarea from '@/components/BaseFormTextarea.vue';
+import BasePreloader from "@/components/BasePreloader.vue";
 
 import numberFormat from "@/helpers/numberFormat";
 import axios from 'axios';
@@ -158,17 +159,17 @@ import { mapGetters } from "vuex";
 export default {
     data() {
         return {
-            formData: {
-              deliveryTypeId: 0,
-              // paymentTypeId: 0,
-            },
+            formData: {},
             formError: {},
             formErrorMessage: '',
             deliveriesData: null,
             paymentsData: null,
+            
+            orderSending:false,
+            orderSend:false,
         }
     },
-    components: { BaseFormText, BaseFormTextarea },
+    components: { BaseFormText, BaseFormTextarea, BasePreloader },
     filters: {
       numberFormat
     },
@@ -177,7 +178,10 @@ export default {
         return this.deliveriesData;
       },
       deliveryPrice() {
-        // return this.deliveries.find(del=>del.id===this.formData.deliveryTypeId).price;
+        return this.deliverySelected ? this.deliveries.find(del=>del.id===this.deliverySelected).price : '';
+      },
+      deliverySelected() {
+        return this.formData.deliveryTypeId;
       },
       payments() {
         return this.paymentsData;
@@ -197,7 +201,6 @@ export default {
           .get(API_BASE_URL+`/api/deliveries`)
           .then(response => {
             this.deliveriesData = response.data;
-            this.loadPayments();
             })
           // .catch(()=> this.productLoadingFailed = true)
           // .then(()=> this.productLoading = false)
@@ -205,10 +208,8 @@ export default {
       },    
       loadPayments() {
         clearTimeout(this.loadPaymentsTimer);
-        console.log(900)
         this.loadPaymentsTimer = setTimeout(()=> {
           axios
-          // !!!!!!!!!!!!!!!!!
           .get(API_BASE_URL+`/api/payments`, {
             params: {
               deliveryTypeId: this.formData.deliveryTypeId
@@ -221,9 +222,11 @@ export default {
       },   
       order() {
         this.formError = {};
-        this.formErrorMessage = '',
+        this.formErrorMessage = '';
+        this.orderSending = true;
+        this.orderSend = false;
 
-         axios
+        axios
           .post(API_BASE_URL+`/api/orders`, {
             ...this.formData
           }, {
@@ -235,22 +238,24 @@ export default {
             this.$store.commit('resetCart');
             this.$store.commit('updateOrderInfo', response.data);
             this.$router.push({name: 'orderInfo', params: {id: response.data.id}});
+            this.orderSend = true;            
           })
           .catch(error => {
             this.formError = error.response.data.error.request || {};
              this.formErrorMessage = error.response.data.error.message;
           })
-      },
+          .finally(() => {
+            this.orderSending = false;
+          });
+      }
     },
   created() {
     this.loadDeliveries();
-    // this.loadPayments();
   },
    watch: {
-    deliveryTypeId() {
-      this.loadPayments();
-    },
-   }
-    
+      deliverySelected() {
+        this.loadPayments();
+      }
+   },    
 }
 </script>
