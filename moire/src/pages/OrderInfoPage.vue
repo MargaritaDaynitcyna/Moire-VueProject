@@ -20,7 +20,7 @@
         </ul>
 
         <h1 class="content__title">
-          Заказ оформлен <span>№ {{ orderInfo.id }}</span>
+          Заказ оформлен <span class="nowrap">№ {{ orderInfo.id }}</span>
         </h1>
       </div>
 
@@ -88,7 +88,7 @@
               <p>
                 Итого: <b> {{ orderInfo.basket.items.length }}</b> товара на
                 сумму
-                <b> {{ orderInfo.totalPrice | numberFormat }} ₽</b>
+                <b class="nowrap"> {{ orderInfo.totalPrice | numberFormat }} ₽</b>
               </p>
             </div>
           </div>

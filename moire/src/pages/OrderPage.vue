@@ -126,7 +126,7 @@
           
           <div class="cart__total">
             <p>Доставка: <b v-if="deliverySelected">{{ deliveryPrice | numberFormat }} ₽</b></p>
-            <p>Итого: <b>{{ products.length }}</b> товара на сумму <b>{{ totalPrice | numberFormat }} ₽</b></p>
+            <p>Итого: <b>{{ products.length }}</b> товара на сумму <b class="nowrap">{{ totalPrice | numberFormat }} ₽</b></p>
           </div>
 
           <button class="cart__button button button--primery" type="submit">

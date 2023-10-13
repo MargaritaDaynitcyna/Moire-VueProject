@@ -29,7 +29,7 @@
 
       <div class="catalog__quantity quantity">
         <span class="quantity__text">
-          Показывать товаров по 
+         Товаров на странице 
         </span>
         <select class="quantity__selcect" name="" id="" v-model.number="productsPerPage">
           <!-- <option value="3">3</option> -->

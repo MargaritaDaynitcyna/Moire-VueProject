@@ -1,6 +1,9 @@
 <template>
-          <aside class="filter">
-        <form class="filter__form form" action="#" method="get" @submit.prevent="submit">
+    <aside class="filter">
+        <button class="filter__btn" id="filterIcon" name="Фильтрация" @click.prevent="openFilters">
+           <img class="filter__icon" src="img/svg/filter.svg" alt="Иконка фильтрации">
+        </button>
+        <form class="filter__form form" id="filterForm" action="#" method="get" @submit.prevent="submit">
           <fieldset class="form__block">
             <legend class="form__legend">Цена</legend>
             <label class="form__label form__label--price">
@@ -121,6 +124,8 @@
                 colorsData: [],
                 materialsData: [],
                 collectionsData: [],
+
+                filtersIsOpen: false,
             }
         },
         props: ['priceFrom', 'priceTo', 'categoryId', 'colorId', 'materialId', 'collectionId'],
@@ -177,6 +182,10 @@
                 this.$emit('update:colorId', this.currentColorId);
                 this.$emit('update:materialId', this.currentMaterialId);
                 this.$emit('update:collectionId', this.currentCollectionId);
+
+                if(this.filtersIsOpen) {
+                  this.closeFilters();
+                }
             },
             reset() {
                 this.$emit('update:priceFrom', 0);
@@ -185,6 +194,10 @@
                 this.$emit('update:colorId', []);
                 this.$emit('update:materialId', []);
                 this.$emit('update:collectionId', []);
+
+                if(this.filtersIsOpen) {
+                  this.closeFilters();
+                }
             },
             loadCategories() {
               axios.get(API_BASE_URL+'/api/productCategories')
@@ -201,6 +214,20 @@
             loadCollections() {
               axios.get(API_BASE_URL+'/api/seasons')
                 .then(response => this.collectionsData = response.data)
+            },
+            openFilters() {
+              if(!this.filtersIsOpen) {
+                this.filtersIsOpen = true;
+                document.querySelector('.filter__form').classList.add('filter_is-open');
+                document.querySelector('.filter__icon').setAttribute('src', 'img/svg/close.svg');
+              } else {
+                this.closeFilters();
+              }
+            },
+            closeFilters() {
+                this.filtersIsOpen = false;
+                document.querySelector('.filter__form').classList.remove('filter_is-open');
+                document.querySelector('.filter__icon').setAttribute('src', 'img/svg/filter.svg');
             },
         },
         created() {
