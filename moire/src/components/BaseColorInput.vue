@@ -22,48 +22,18 @@
 
 <script>
 export default {
-    props: ["colors", "check"],
+  props: ["colors", "check"],
   computed: {
-            currentCheck: {
-              get() {
-                return this.check;
-              },
-              set(value) {
-                console.log(this.check)
-                this.$emit('update:check', value);
-              }
-            }
+    currentCheck: {
+      get() {
+        return this.check;
+      },
+      set(value) {
+        console.log(this.check);
+        this.$emit("update:check", value);
+      },
+    },
   },
-  //  watch: {
-  //           check(value) {
-  //               this.currentCheck = value;
-  //           },
-  //  },
-//   data () {
-//   return {
-//       // hoverLocal: this.check
-//       currentCheck: 0
-//   }
-// },
-  // props: {
-  //   checked: Boolean
-  // },
- 
-  //   data() {
-  // return {
-  //   pr
-  //   // colorItem: this.product.colors[0].color.code,
-  //   // productSize: this.product.sizes[0].id,
-  // };
-  //   },
-    // methods: {
-    //   ch(check) {
-    //     // this.$emit("update:pr", this.pr);
-    //     // this.$emit('change', this.check)
-    //     this.$emit('change', check)
-
-    //   }
-    // },
 };
-// 
+//
 </script>

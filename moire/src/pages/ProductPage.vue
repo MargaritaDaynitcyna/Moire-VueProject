@@ -1,8 +1,8 @@
 <template>
-  <div class="product__preloader"  v-if="productLoading">
+  <div class="product__preloader" v-if="productLoading">
     <BasePreloader></BasePreloader>
   </div>
-  <div v-else-if="!productData"> ERROR...</div>
+  <div v-else-if="!productData">ERROR...</div>
 
   <main class="content container" v-else>
     <div class="content__top">
@@ -28,12 +28,7 @@
     <section class="item">
       <div class="item__pics pics">
         <div class="pics__wrapper">
-          <img
-            width="570"
-            height="570"
-            :src="srcImage"
-            :alt="product.title"
-          />
+          <img width="570" height="570" :src="srcImage" :alt="product.title" />
         </div>
         <!-- <ul class="pics__list">
           <li class="pics__item">
@@ -86,16 +81,20 @@
               <fieldset class="form__block">
                 <legend class="form__legend">Цвет</legend>
                 <!-- <BaseColorInput :colors="product.colors" v-model="productColor"/> -->
-                <BaseColorInput :colors="product.colors" :check.sync="productColor"/>
-                
-                <!-- <ul class="colors colors--black">
-                  <li class="colors__item" v-for="color in product.colors" :key="color.id">
+                <!-- <BaseColorInput :colors="product.colors" :check.sync="productColor"/> -->
+
+                <ul class="colors colors--black">
+                  <li
+                    class="colors__item"
+                    v-for="color in product.colors"
+                    :key="color.id"
+                  >
                     <label class="colors__label">
                       <input
                         class="colors__radio sr-only"
                         type="radio"
                         name="color-item"
-                        :value="color.id"                        
+                        :value="color.id"
                         v-model="productColor"
                       />
                       <span
@@ -105,33 +104,49 @@
                       </span>
                     </label>
                   </li>
-                </ul> -->
+                </ul>
               </fieldset>
 
               <fieldset class="form__block">
                 <legend class="form__legend">Размер</legend>
-                <label class="form__label form__label--small form__label--select">
-                  <select class="form__select" type="text" name="category" v-model="productSize">
-                    <option v-for="size in product.sizes" :key="size.id" :value="size.id">{{ size.title }}</option>
+                <label
+                  class="form__label form__label--small form__label--select"
+                >
+                  <select
+                    class="form__select"
+                    type="text"
+                    name="category"
+                    v-model="productSize"
+                  >
+                    <option
+                      v-for="size in product.sizes"
+                      :key="size.id"
+                      :value="size.id"
+                    >
+                      {{ size.title }}
+                    </option>
                   </select>
                 </label>
               </fieldset>
               <!-- <BaseSize :product="product" :size.sync="productSize"/> -->
             </div>
 
-            <button class="item__button button button--primery" type="submit" :disabled="productAddSending">
-              В корзину
+            <button
+              class="item__button button button--primery"
+              type="submit"
+              :disabled="productAddSending"
+            >
+              <transition name="fade" mode="out-in">
+                <span v-if="productAddSending">добавляем..</span>
+                <span v-else>В корзину</span>
+              </transition>
             </button>
-
+            <!-- 
             <div class="added" v-show="productAdded">Добавлено!</div>
-            <div class="added" v-show="productAddSending">Товар добавляется в корзину...</div>
-
+            <div class="added" v-show="productAddSending">Товар добавляется в корзину...</div> -->
           </form>
         </div>
       </div>
-
-      
-
 
       <div class="item__desc">
         <ul class="tabs">
@@ -205,13 +220,13 @@
 // import categories from "@/data/categories";
 // import gotoPage from "@/helpers/gotoPage";
 import BasePlusMinus from "@/components/BasePlusMinus";
-import BaseColorInput from "@/components/BaseColorInput";
+// import BaseColorInput from "@/components/BaseColorInput";
 import BasePreloader from "@/components/BasePreloader.vue";
 
 import numberFormat from "@/helpers/numberFormat";
-import axios from 'axios';
-import { API_BASE_URL } from '@/config.js';
-import { mapActions } from 'vuex';
+import axios from "axios";
+import { API_BASE_URL } from "@/config.js";
+import { mapActions } from "vuex";
 
 export default {
   data() {
@@ -225,14 +240,13 @@ export default {
       productLoading: false,
       productLoadingFailed: false,
 
-      productAdded:false,
-      productAddSending:false,
+      productAdded: false,
+      productAddSending: false,
       // productColor: this.productData.colors[0].id,
-
     };
   },
   // props: ['pageParams'], = .$route.params.
-  components: { BasePlusMinus, BaseColorInput, BasePreloader },
+  components: { BasePlusMinus, BasePreloader },
   filters: {
     numberFormat,
   },
@@ -258,17 +272,18 @@ export default {
     //     // });
     //     console.log(value);
     //     return value;
-        
+
     //   },
     // },
-          // productColor() {
-          //   console.log(this.productData);
-          //   console.log(this.product);
+    // productColor() {
+    //   console.log(this.productData);
+    //   console.log(this.product);
 
-          //   this.productData.colors[0].id
-          //   },
+    //   this.productData.colors[0].id
+    //   },
     productColorId() {
-      return this.product.colors.find((color) => color.id === this.productColor).color.id;
+      return this.product.colors.find((color) => color.id === this.productColor)
+        .color.id;
     },
     srcImage() {
       return this.product.colors.find((color) => color.id === this.productColor)
@@ -280,7 +295,7 @@ export default {
   },
   methods: {
     // gotoPage,
-    ...mapActions(['addProductToCart']),
+    ...mapActions(["addProductToCart"]),
 
     addToCart() {
       this.productAdded = false;
@@ -290,8 +305,7 @@ export default {
         colorId: this.productColorId,
         sizeId: this.productSize,
         quantity: this.productAmount,
-      })
-      .then(()=>{
+      }).then(() => {
         this.productAdded = true;
         this.productAddSending = false;
       });
@@ -307,30 +321,32 @@ export default {
       this.productLoadingFailed = false;
 
       clearTimeout(this.loadProductTimer);
-      this.loadProductTimer = setTimeout(()=> {
+      this.loadProductTimer = setTimeout(() => {
         axios
-        .get(API_BASE_URL+`/api/products/${+this.$route.params.id}`)
-        .then(response => {this.productData = response.data;
-        this.productSize = response.data.sizes[0].id;
-        this.productColor = response.data.colors[0].id})
-        .catch(()=> this.productLoadingFailed = true)
-        .then(()=> this.productLoading = false)
+          .get(API_BASE_URL + `/api/products/${+this.$route.params.id}`)
+          .then((response) => {
+            this.productData = response.data;
+            this.productSize = response.data.sizes[0].id;
+            this.productColor = response.data.colors[0].id;
+          })
+          .catch(() => (this.productLoadingFailed = true))
+          .then(() => (this.productLoading = false));
       }, 100);
-    },    
+    },
   },
   created() {
-    this.loadProduct()
+    this.loadProduct();
   },
   watch: {
-    '$route.params.id': {
+    "$route.params.id": {
       handler() {
         this.loadProduct();
       },
-      imediate: true
+      imediate: true,
     },
     // productColor: function() {
     //   console.log(this.productColor)
     // },
-  }
+  },
 };
 </script>

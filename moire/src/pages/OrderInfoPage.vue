@@ -1,6 +1,8 @@
 <template>
   <main class="content container">
-    <BasePreloader v-if="!orderInfo"></BasePreloader>
+    <div class="product__preloader" v-if="!orderInfo">
+      <BasePreloader></BasePreloader>
+    </div>
     <div v-else>
       <div class="content__top">
         <ul class="breadcrumbs">
