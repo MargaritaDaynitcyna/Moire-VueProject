@@ -1262,6 +1262,8 @@ right: 0;
 }
 
 .catalog__pic {
+    position: relative;
+
     display: block;
     max-width: 270px;
     min-width: 200px;
@@ -1275,6 +1277,17 @@ right: 0;
     max-height: 350px;
     -o-object-fit: cover;
     object-fit: cover
+}
+.catalog__pic:after {
+    content: url('../img/svg/addtocart.svg');
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        /* padding: 4px;
+        padding-top: 4px; */
+        width: 25px;
+        height: 25px;
+        background-color: #fff;
 }
 
 .catalog__title {

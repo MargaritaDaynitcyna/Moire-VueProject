@@ -35,7 +35,7 @@
     </p> -->
     <span class="product__code"> Артикул: {{ item.product.id }} </span>
 
-    <BasePlusMinus :amount.sync="amount" class="product__counter" />
+    <BasePlusMinus v-model="amount" class="product__counter" />
 
     <b class="product__price">
       {{ totalPricePretty }} ₽
@@ -55,7 +55,7 @@
     <BaseModal :open="isShowDeletedMessage">
       Удалить товар из корзины?
       <button @click.prevent="deleteProduct(item.basketItemId)">yes</button>
-      <button>no</button>
+      <button @click.prevent="isShowDeletedMessage = false">no</button>
     </BaseModal>
   </li>
 </template>

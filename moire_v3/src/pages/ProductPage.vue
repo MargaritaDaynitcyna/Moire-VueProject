@@ -72,7 +72,7 @@
                   </svg>
                 </button>
               </div> -->
-              <BasePlusMinus :v-model="productAmount" />
+              <BasePlusMinus v-model="productAmount" />
 
               <b class="item__price"> {{ productPricePretty }} ₽ </b>
             </div>

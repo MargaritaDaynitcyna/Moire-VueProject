@@ -1,6 +1,6 @@
 <template>
   <div class="product__counter form__counter">
-    <button type="button" aria-label="Убрать один товар" @click.prevent="minus" :class="{'button--disabled': amount === 1 }">
+    <button type="button" aria-label="Убрать один товар" @click.prevent="minus" :class="{'button--disabled': modelValue === 1 }">
       <svg width="10" height="10" fill="currentColor">
         <use xlink:href="#icon-minus"></use>
       </svg>
@@ -23,20 +23,20 @@ export default {
       get() {
         return this.modelValue;
       },
-      set(modelValue) {
-        this.$emit("update:modelValue", modelValue);
+      set(value) {
+        this.$emit("update:modelValue", value);
       },
     },
   },
-  // methods: {
-  //   plus() {
-  //     this.$emit("update:amount", this.amount + 1);
-  //   },
-  //   minus() {
-  //     if (this.amount >= 2) {
-  //       this.$emit("update:amount", this.amount - 1);
-  //     }
-  //   },
-  // },
+  methods: {
+    plus() {
+      this.$emit("update:modelValue", this.modelValue + 1);
+    },
+    minus() {
+      if (this.modelValue >= 2) {
+        this.$emit("update:modelValue", this.modelValue - 1);
+      }
+    },
+  },
 };
 </script>
