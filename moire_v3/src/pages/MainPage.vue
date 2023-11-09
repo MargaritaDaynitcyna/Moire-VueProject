@@ -9,12 +9,12 @@
 
     <div class="content__catalog">
       <ProductFilter
-        :price-from.sync="filterPriceFrom"
-        :price-to.sync="filterPriceTo"
-        :category-id.sync="filterCategoryId"
-        :color-id.sync="filterColorId"
-        :material-id.sync="filterMaterialId"
-        :collection-id.sync="filterCollectionId"
+        v-model:price-from="filterPriceFrom"
+        v-model:price-to="filterPriceTo"
+        v-model:category-id="filterCategoryId"
+        v-model:color-id="filterColorId"
+        v-model:material-id="filterMaterialId"
+        v-model:collection-id="filterCollectionId"
       />
 
       <section class="catalog">

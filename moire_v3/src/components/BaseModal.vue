@@ -1,5 +1,5 @@
 <template>
-  <Teleport v-if="open" to="#teleport-target">
+  <Teleport v-if="modelValue" to="#teleport-target">
     <div class="teleport-blackout"></div>
     <div class="teleport-modal" @click="onOutsideClick">
       <div
@@ -18,10 +18,15 @@
 <script>
 export default {
   props: {
-    open: { type: Boolean },
+    modelValue: { type: Boolean },
   },
   methods: {
     onOutsideClick($event) {
+      console.log($event)
+      console.log($event.target)
+      console.log(this.$refs)
+      console.log(this.$refs.content)
+
       if (
         $event.target !== this.$refs.content
       ) {
@@ -29,7 +34,7 @@ export default {
       }
     },
     doClose() {
-      this.$emit('update:open', false);
+      this.$emit('update:modelValue', false);
     },
   },
 };
@@ -61,7 +66,8 @@ export default {
 }
 .teleport-modal__content {
   position: relative;
-  min-width: 1000px;
+  min-width: 500px;
+  text-align: center;
   margin-top: auto;
   margin-bottom: auto;
   padding: 40px;
@@ -72,5 +78,20 @@ export default {
   padding: 10px;
   top: -10px;
   right: -10px;
+  cursor: pointer;
+}
+.teleport-modal__title {
+  pointer-events: none;
+}
+.teleport-modal__buttons {
+      display: flex;
+    justify-content: center;
+    align-items: stretch;
+    gap: 30px;
+    margin-top: 20px;
+    pointer-events: none;
+}
+.teleport-modal__buttons .button{
+      pointer-events: auto
 }
 </style>

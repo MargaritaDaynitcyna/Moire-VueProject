@@ -40,7 +40,7 @@
 <script>
 import gotoPage from "@/helpers/gotoPage";
   import numberFormat from "@/helpers/numberFormat.js";
-// import BaseColorInput from "@/components/BaseColorInput";
+// import BaseColorInput from "@/components/BaseColorInput.vue";
 
 export default {
   data() {

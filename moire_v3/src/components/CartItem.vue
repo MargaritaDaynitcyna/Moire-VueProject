@@ -52,10 +52,10 @@
       </svg>
     </button>
 
-    <BaseModal :open="isShowDeletedMessage">
-      Удалить товар из корзины?
-      <button @click.prevent="deleteProduct(item.basketItemId)">yes</button>
-      <button @click.prevent="isShowDeletedMessage = false">no</button>
+    <BaseModal v-model="isShowDeletedMessage">
+      <div class="teleport-modal__title">Удалить товар из корзины?</div>
+     <div class="teleport-modal__buttons"> <button class="button button--second" @click.prevent="isShowDeletedMessage = false">нет</button>
+      <button class="button button--primery" @click.prevent="deleteProduct(item.basketItemId)">да</button></div>
     </BaseModal>
   </li>
 </template>

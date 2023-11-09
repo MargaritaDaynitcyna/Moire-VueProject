@@ -22,15 +22,15 @@
 
 <script>
 export default {
-  props: ["colors", "check"],
+  props: ["colors", "modelValue"],
   computed: {
     currentCheck: {
       get() {
-        return this.check;
+        return this.modelValue;
       },
       set(value) {
-        console.log(this.check);
-        this.$emit("update:check", value);
+        console.log(this.modelValue);
+        this.$emit("update:modelValue", value);
       },
     },
   },
