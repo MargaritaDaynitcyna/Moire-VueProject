@@ -39,7 +39,7 @@
 
 <script>
 import gotoPage from "@/helpers/gotoPage";
-  import numberFormat from "@/helpers/numberFormat.js";
+import numberFormat from "@/helpers/numberFormat.js";
 // import BaseColorInput from "@/components/BaseColorInput.vue";
 
 export default {
@@ -48,9 +48,9 @@ export default {
       colorItem: this.product.colors[0].id,
     };
   },
+  // components: { BaseColorInput },
   computed: {
     srcImage() {
-      // console.log(this.colorItem);
       return this.product.colors.find((color) => color.id === this.colorItem)
         .gallery
         ? this.product.colors.find((color) => color.id === this.colorItem)
@@ -65,6 +65,5 @@ export default {
     gotoPage,
   },
   props: ["product"],
-  // components: { BaseColorInput },
 };
 </script>

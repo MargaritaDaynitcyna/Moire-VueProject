@@ -3,7 +3,9 @@
     <div class="content__top">
       <ul class="breadcrumbs">
         <li class="breadcrumbs__item">
-          <router-link class="breadcrumbs__link" :to="{ name: 'main' }"> Каталог </router-link>
+          <router-link class="breadcrumbs__link" :to="{ name: 'main' }">
+            Каталог
+          </router-link>
         </li>
         <li class="breadcrumbs__item">
           <span class="breadcrumbs__link"> Корзина </span>
@@ -36,10 +38,14 @@
             Итого: <span class="nowrap">{{ totalPricePretty }} ₽</span>
           </p>
 
-          <router-link v-slot="{navigate}" :to="{name: 'order'}" custom>
-            <button class="cart__button button button--primery" type="button" @click="navigate">
+          <router-link v-slot="{ navigate }" :to="{ name: 'order' }" custom>
+            <button
+              class="cart__button button button--primery"
+              type="button"
+              @click="navigate"
+            >
               Оформить заказ
-            </button>            
+            </button>
           </router-link>
         </div>
       </form>
@@ -48,25 +54,21 @@
 </template>
 
 <script>
-  import numberFormat from "@/helpers/numberFormat.js";
-  import CartItem from "@/components/CartItem.vue";
-  import { mapGetters } from "vuex";
+import numberFormat from "@/helpers/numberFormat.js";
+import CartItem from "@/components/CartItem.vue";
+import { mapGetters } from "vuex";
 import { defineComponent } from "vue";
 
-  export default defineComponent ({
-    components: { CartItem },
-    computed: {
-      ...mapGetters({
-        products: "cartDetailProducts",
-        totalPrice: "cartTotalPrice",
-      }),
+export default defineComponent({
+  components: { CartItem },
+  computed: {
+    ...mapGetters({
+      products: "cartDetailProducts",
+      totalPrice: "cartTotalPrice",
+    }),
     totalPricePretty() {
       return numberFormat(this.totalPrice);
     },
-
-      // products() {
-      //     return this.$store.getters.cartDetailProducts;
-      // }
-    },
-  });
+  },
+});
 </script>

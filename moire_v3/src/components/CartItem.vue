@@ -12,34 +12,25 @@
       {{ item.product.title }}
     </h3>
     <div class="product__info">
-          <p class="product__info--color">
-          Цвет:
-          <span>
-            <i :style="{backgroundColor: item.color.color.code}"></i>
-            {{  item.color.color.title }}
-          </span>
-        </p>
-        <p class="product__info--size">
-          Размер: 
-          <span>
-            {{  item.size.title }}
-          </span>
-        </p>
+      <p class="product__info--color">
+        Цвет:
+        <span>
+          <i :style="{ backgroundColor: item.color.color.code }"></i>
+          {{ item.color.color.title }}
+        </span>
+      </p>
+      <p class="product__info--size">
+        Размер:
+        <span>
+          {{ item.size.title }}
+        </span>
+      </p>
     </div>
-    <!-- <p class="product__info product__info--color">
-      Размер:
-      <span>
-        <i :style="{backgroundColor: item.product.colors[0].color.code}"></i>
-        {{  item.product.colors[0].color.title }}
-      </span>
-    </p> -->
     <span class="product__code"> Артикул: {{ item.product.id }} </span>
 
     <BasePlusMinus v-model="amount" class="product__counter" />
 
-    <b class="product__price">
-      {{ totalPricePretty }} ₽
-    </b>
+    <b class="product__price"> {{ totalPricePretty }} ₽ </b>
 
     <button
       class="product__del button-del"
@@ -54,8 +45,20 @@
 
     <BaseModal v-model="isShowDeletedMessage">
       <div class="teleport-modal__title">Удалить товар из корзины?</div>
-     <div class="teleport-modal__buttons"> <button class="button button--second" @click.prevent="isShowDeletedMessage = false">нет</button>
-      <button class="button button--primery" @click.prevent="deleteProduct(item.basketItemId)">да</button></div>
+      <div class="teleport-modal__buttons">
+        <button
+          class="button button--second"
+          @click.prevent="isShowDeletedMessage = false"
+        >
+          нет
+        </button>
+        <button
+          class="button button--primery"
+          @click.prevent="deleteProduct(item.basketItemId)"
+        >
+          да
+        </button>
+      </div>
     </BaseModal>
   </li>
 </template>
@@ -63,14 +66,14 @@
 <script>
 import BasePlusMinus from "@/components/BasePlusMinus.vue";
 import BaseModal from "@/components/BaseModal.vue";
-  import numberFormat from "@/helpers/numberFormat.js";
+import numberFormat from "@/helpers/numberFormat.js";
 import { mapActions, mapMutations } from "vuex";
 
 export default {
   data() {
     return {
-     isShowDeletedMessage: false,
-    }
+      isShowDeletedMessage: false,
+    };
   },
   props: ["item"],
   components: { BasePlusMinus, BaseModal },
@@ -82,52 +85,24 @@ export default {
       set(value) {
         this.$store.dispatch("updateCartProductAmount", {
           basketItemId: this.item.basketItemId,
-          // productId: this.item.idInCart,
           amount: value,
         });
       },
     },
     totalPricePretty() {
-      return numberFormat(this.item.amount * this.item.product.price)
+      return numberFormat(this.item.amount * this.item.product.price);
     },
   },
-  // methods: {
-  //   ...mapMutations({ deleteProduct: "deleteCartProduct" }),
+  methods: {
+    ...mapActions(["deleteCartProduct"]),
 
-  //   deleteProduct(productId) {
-  //     this.$store.commit('deleteCartProduct', productId)
-  //   }
-
-     methods: {
-    // gotoPage,
-    //   ...mapMutations({ deleteProduct: "deleteCartProduct" }),
-
-    // deleteProduct(basketItemId) {
-    //   this.$store.commit('deleteCartProduct', basketItemId)
-    // }
-      ...mapActions(['deleteCartProduct']),
-
-      deleteProduct(basketItemId) {
-        // console.log(this.item.idInCart)
-        // this.productAdded = false;
-        // this.productAddSending = true;
-         this.isShowDeletedMessage = true;
-        console.log(basketItemId);
-        this.deleteCartProduct({
-          basketItemId: basketItemId,
-        })
-        // .then(()=>{
-        //   // this.productAdded = true;
-        //   // this.productAddSending = false;
-        // });
-        // this.$store.commit("addProductToCart", {
-        //   productId: this.product.id,
-        //   amount: this.productAmount,
-        //   size: this.productSize,
-        //   color: this.productColor,
-        // });
-      },
+    deleteProduct(basketItemId) {
+      this.isShowDeletedMessage = true;
+      console.log(basketItemId);
+      this.deleteCartProduct({
+        basketItemId: basketItemId,
+      });
     },
-  // },
+  },
 };
 </script>

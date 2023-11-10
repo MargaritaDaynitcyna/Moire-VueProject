@@ -36,14 +36,13 @@
             id=""
             v-model.number="productsPerPage"
           >
-            <!-- <option value="3">3</option> -->
             <option value="6">6</option>
             <option value="9">9</option>
             <option value="12">12</option>
             <option value="18">18</option>
           </select>
         </div>
-        
+
         <div class="product__preloader" v-if="productsLoading">
           <BasePreloader></BasePreloader>
         </div>
@@ -66,7 +65,6 @@
 </template>
 
 <script>
-// import products from "@/data/products";
 import ProductList from "@/components/ProductList.vue";
 import BasePagination from "@/components/BasePagination.vue";
 import BasePreloader from "@/components/BasePreloader.vue";
@@ -78,7 +76,6 @@ export default {
   components: { ProductList, BasePagination, ProductFilter, BasePreloader },
   data() {
     return {
-      // products: products = products,
       filterPriceFrom: 0,
       filterPriceTo: 0,
       filterCategoryId: 0,
@@ -96,62 +93,11 @@ export default {
     };
   },
   computed: {
-    // filteredProducts() {
-    //   let filteredProducts = products;
-
-    //   if (this.filterPriceFrom > 0) {
-    //     filteredProducts = filteredProducts.filter(
-    //       (product) => product.price > this.filterPriceFrom
-    //     );
-    //   }
-
-    //   if (this.filterPriceTo > 0) {
-    //     filteredProducts = filteredProducts.filter(
-    //       (product) => product.price < this.filterPriceTo
-    //     );
-    //   }
-    //   if (this.filterCategoryId) {
-    //     filteredProducts = filteredProducts.filter(
-    //       (product) => product.categoryId === this.filterCategoryId
-    //     );
-    //   }
-    //   if (this.filterMaterialId) {
-    //     // !!!!!!!!!
-    //     // for (let i=0; i<this.filterMaterialId.length; i++) {
-    //     //   filteredProducts = filteredProducts.filter((product) => {product.materialId === this.filterMaterialId[i];
-    //     //   console.log(product.materialId === this.filterMaterialId[i])});
-    //     // }
-    //     // for (let mat of this.filterMaterialId) {
-    //     //   console.log(mat)
-    //     //   console.log(filteredProducts)
-    //     //   filteredProducts = filteredProducts.filter((product) => {console.log(product.materialId === mat); product.materialId === mat; });
-    //     // }
-    //   }
-    //   if (this.filterColllectionId) {
-    //     // !!!!!!!!!
-    //     // for (let i=0; i<this.filterMaterialId.length; i++) {
-    //     //   filteredProducts = filteredProducts.filter((product) => {product.materialId === this.filterMaterialId[i];
-    //     //   console.log(product.materialId === this.filterMaterialId[i])});
-    //     // }
-    //     // for (let mat of this.filterMaterialId) {
-    //     //   console.log(mat)
-    //     //   console.log(filteredProducts)
-    //     //   filteredProducts = filteredProducts.filter((product) => {console.log(product.materialId === mat); product.materialId === mat; });
-    //     // }
-    //   }
-
-    //   return filteredProducts;
-    // },
-
     products() {
-      // const offset = (this.page - 1) * this.productsPerPage;
-      // return this.filteredProducts.slice(offset, offset + this.productsPerPage);
-      // console.log(this.productsData)
       return this.productsData
         ? this.productsData.items.map((product) => {
             return {
               ...product,
-              // image: product.colors[0].gallery[0].file.url,
             };
           })
         : [];

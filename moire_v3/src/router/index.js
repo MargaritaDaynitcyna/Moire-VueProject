@@ -6,8 +6,6 @@ import OrderPage from '@/pages/OrderPage.vue';
 import OrderInfoPage from '@/pages/OrderInfoPage.vue';
 import NotFoundPage from '@/pages/NotFoundPage.vue'
 
-// Vue.use(VueRouter);
-
 const routes = [
     {name: 'main', component: MainPage, path: '/'},
     {name: 'product', component: ProductPage, path: '/product/:id'},
@@ -15,7 +13,6 @@ const routes = [
     {name: 'order', component: OrderPage, path: '/order'},
     {name: 'orderInfo', component: OrderInfoPage, path: '/orders/:id'},
     {name: 'notFound', component: NotFoundPage, path: '/:pathMatch(.*)*'}
-
 ];
 
 const router = createRouter({

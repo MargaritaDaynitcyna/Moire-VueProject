@@ -30,18 +30,6 @@
         <div class="pics__wrapper">
           <img width="570" height="570" :src="srcImage" :alt="product.title" />
         </div>
-        <!-- <ul class="pics__list">
-          <li class="pics__item">
-            <a href="" class="pics__link pics__link--current">
-              <img width="98" height="98" src="img/product-square-2.jpg" srcset="img/product-square-2@2x.jpg 2x" alt="Название товара">
-            </a>
-          </li>
-          <li class="pics__item">
-            <a href="" class="pics__link">
-              <img width="98" height="98" src="img/product-square-3.jpg" srcset="img/product-square-3@2x.jpg 2x" alt="Название товара">
-            </a>
-          </li>
-        </ul> -->
       </div>
 
       <div class="item__info">
@@ -57,21 +45,6 @@
             @submit.prevent="addToCart"
           >
             <div class="item__row item__row--center">
-              <!-- <div class="form__counter">
-                <button type="button" aria-label="Убрать один товар">
-                  <svg width="12" height="12" fill="currentColor">
-                    <use xlink:href="#icon-minus"></use>
-                  </svg>
-                </button>
-
-                <input type="text" v-model.number="productAmount">
-
-                <button type="button" aria-label="Добавить один товар">
-                  <svg width="12" height="12" fill="currentColor">
-                    <use xlink:href="#icon-plus"></use>
-                  </svg>
-                </button>
-              </div> -->
               <BasePlusMinus v-model="productAmount" />
 
               <b class="item__price"> {{ productPricePretty }} ₽ </b>
@@ -80,8 +53,6 @@
             <div class="item__row">
               <fieldset class="form__block">
                 <legend class="form__legend">Цвет</legend>
-                <!-- <BaseColorInput :colors="product.colors" v-model="productColor"/> -->
-                <!-- <BaseColorInput :colors="product.colors" :check.sync="productColor"/> -->
 
                 <ul class="colors colors--black">
                   <li
@@ -127,7 +98,6 @@
                   </select>
                 </label>
               </fieldset>
-              <!-- <BaseSize :product="product" :size.sync="productSize"/> -->
             </div>
 
             <button
@@ -140,9 +110,6 @@
                 <span v-else>В корзину</span>
               </transition>
             </button>
-            <!-- 
-            <div class="added" v-show="productAdded">Добавлено!</div>
-            <div class="added" v-show="productAddSending">Товар добавляется в корзину...</div> -->
           </form>
         </div>
       </div>
@@ -150,7 +117,6 @@
       <div class="item__desc">
         <ul class="tabs">
           <li class="tabs__item">
-            <!-- tabs__link--current ??? -->
             <a
               class="tabs__link"
               :class="{ tabs__link_current: state === 'info' }"
@@ -215,11 +181,7 @@
 </template>
 
 <script>
-// import products from "@/data/products";
-// import categories from "@/data/categories";
-// import gotoPage from "@/helpers/gotoPage";
 import BasePlusMinus from "@/components/BasePlusMinus.vue";
-// import BaseColorInput from "@/components/BaseColorInput";
 import BasePreloader from "@/components/BasePreloader.vue";
 
 import numberFormat from "@/helpers/numberFormat";
@@ -241,46 +203,19 @@ export default {
 
       productAdded: false,
       productAddSending: false,
-      // productColor: this.productData.colors[0].id,
     };
   },
-  // props: ['pageParams'], = .$route.params.
   components: { BasePlusMinus, BasePreloader },
-
   computed: {
     product() {
-      // return products.find((product) => product.id === +this.$route.params.id);
       return this.productData;
     },
-            productPricePretty() {
-      return numberFormat(this.product.price)
+    productPricePretty() {
+      return numberFormat(this.product.price);
     },
-
     category() {
-      // return categories.find(
-      //   (category) => category.id === this.product.categoryId
-      // );
       return this.productData.category;
     },
-    // productColor: {
-    //   get() {
-    //     return this.product.colors[0].id;
-    //   },
-    //   set(value) {
-    //     // this.$store.commit("addProductToCart", {
-    //     //   color: value,
-    //     // });
-    //     console.log(value);
-    //     return value;
-
-    //   },
-    // },
-    // productColor() {
-    //   console.log(this.productData);
-    //   console.log(this.product);
-
-    //   this.productData.colors[0].id
-    //   },
     productColorId() {
       return this.product.colors.find((color) => color.id === this.productColor)
         .color.id;
@@ -294,7 +229,6 @@ export default {
     },
   },
   methods: {
-    // gotoPage,
     ...mapActions(["addProductToCart"]),
 
     addToCart() {
@@ -309,12 +243,6 @@ export default {
         this.productAdded = true;
         this.productAddSending = false;
       });
-      // this.$store.commit("addProductToCart", {
-      //   productId: this.product.id,
-      //   amount: this.productAmount,
-      //   size: this.productSize,
-      //   color: this.productColor,
-      // });
     },
     loadProduct() {
       this.productLoading = true;
@@ -344,9 +272,6 @@ export default {
       },
       imediate: true,
     },
-    // productColor: function() {
-    //   console.log(this.productColor)
-    // },
   },
 };
 </script>

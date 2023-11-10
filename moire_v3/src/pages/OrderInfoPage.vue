@@ -101,30 +101,25 @@
 </template>
 
 <script>
-// import { mapActions } from "vuex";
 import numberFormat from "@/helpers/numberFormat.js";
 import BasePreloader from "@/components/BasePreloader.vue";
 
-export default {
-  // ...mapActions(["loadOrderInfo"]),
+export default { 
   components: { BasePreloader },
   computed: {
     orderInfo() {
-      // console.log(this.$store.state.orderInfo.basket.items)
-
       return this.$store.state.orderInfo;
     },
-
-        deliveryPricePretty() {
-      return numberFormat(this.orderInfo.deliveryType.price)
+    deliveryPricePretty() {
+      return numberFormat(this.orderInfo.deliveryType.price);
     },
-        totalPricePretty() {
-      return numberFormat(this.orderInfo.totalPrice)
+    totalPricePretty() {
+      return numberFormat(this.orderInfo.totalPrice);
     },
   },
   methods: {
-            productPricePretty(product) {
-      return numberFormat(product.price * product.quantity)
+    productPricePretty(product) {
+      return numberFormat(product.price * product.quantity);
     },
   },
   created() {
@@ -137,11 +132,11 @@ export default {
     this.$store.dispatch("loadOrderInfo", this.$route.params.id);
   },
   watch: {
-    '$route.params.id': {
+    "$route.params.id": {
       handler() {
         this.$store.dispatch("loadOrderInfo", this.$route.params.id);
       },
-      imediate: true
+      imediate: true,
     },
   },
 };

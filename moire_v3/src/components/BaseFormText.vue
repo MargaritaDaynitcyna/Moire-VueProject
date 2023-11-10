@@ -12,11 +12,11 @@
 <script>
 import formFieldMixin from "@/mixins/formFieldMixin.js";
 export default {
-    props: {
-        type: {
-            default: 'text'
-        }
+  props: {
+    type: {
+      default: "text",
     },
-    mixins: [formFieldMixin],
+  },
+  mixins: [formFieldMixin],
 };
 </script>

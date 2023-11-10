@@ -63,22 +63,6 @@
               placeholder="Ваши пожелания"
               v-model="formData.comment"
             />
-
-            <!-- <BaseFormField title="ФИО" :error="formError.name">
-                <input class="form__input" v-model="formData.name" type="text" name="name" placeholder="Введите ваше полное имя">
-            </BaseFormField> -->
-            <!-- <BaseFormField title="Адрес доставки" :error="formError.address">
-                <input class="form__input" v-model="formData.address" type="text" name="address" placeholder="Введите ваш адрес">
-            </BaseFormField>
-            <BaseFormField title="Телефон" :error="formError.phone">
-                <input class="form__input" v-model="formData.phone" type="tel" name="phone" placeholder="Введите ваш телефон">
-            </BaseFormField>
-            <BaseFormField title="Email" :error="formError.email">
-                <input class="form__input" v-model="formData.email" type="email" name="email" placeholder="Введи ваш Email">
-            </BaseFormField>
-            <BaseFormField title="ФИО" :error="formError.comments">
-                <textarea class="form__input form__input--area" v-model="formData.comments" name="comments" placeholder="Ваши пожелания"></textarea>
-            </BaseFormField> -->
           </div>
 
           <div class="cart__options">
@@ -96,7 +80,8 @@
               <div class="order__loading" v-if="deliveryLoading">
                 <BasePreloader></BasePreloader>
               </div>
-              <li v-else
+              <li
+                v-else
                 class="options__item"
                 v-for="delivery of deliveries"
                 :key="delivery.id"
@@ -118,18 +103,10 @@
               <span class="form__error" v-if="formError.deliveryTypeId">{{
                 formError.deliveryTypeId
               }}</span>
-              <!-- <li class="options__item">
-                <label class="options__label">
-                  <input class="options__radio sr-only" type="radio" name="delivery" value="0" checked="">
-                  <span class="options__value">
-                    Курьером <b>290 ₽</b>
-                  </span>
-                </label>
-              </li> -->
             </ul>
 
             <h3 class="cart__title">Оплата</h3>
-            <ul v-if="deliverySelected" class="cart__options options"> 
+            <ul v-if="deliverySelected" class="cart__options options">
               <div v-if="paymentLoadingFailed">
                 Что-то пошло не так...
                 <button
@@ -142,7 +119,8 @@
               <div class="order__loading" v-if="paymentLoading">
                 <BasePreloader></BasePreloader>
               </div>
-              <li v-else
+              <li
+                v-else
                 class="options__item"
                 v-for="payment of payments"
                 :key="payment.id"
@@ -163,14 +141,6 @@
               <span class="form__error" v-if="formError.paymentTypeId">{{
                 formError.paymentTypeId
               }}</span>
-              <!-- <li class="options__item">
-                <label class="options__label">
-                  <input class="options__radio sr-only" type="radio" name="pay" value="cash">
-                  <span class="options__value">
-                    Наличными при получении
-                  </span>
-                </label>
-              </li> -->
             </ul>
             <p v-else>Способы оплаты появятся после выбора типа доставки</p>
           </div>
@@ -196,24 +166,12 @@
               <b>{{ productPricePretty(product) }} ₽</b>
               <span>Артикул: {{ product.product.id }}</span>
             </li>
-            <!-- <li class="cart__order">
-              <h3>Гироскутер Razor Hovertrax 2.0ii</h3>
-              <b>1 990 ₽</b>
-              <span>Артикул: 150030</span>
-            </li>
-            <li class="cart__order">
-              <h3>Электрический дрифт-карт Razor Lil’ Crazy</h3>
-              <b>4 090 ₽</b>
-              <span>Артикул: 150030</span>
-            </li> -->
           </ul>
 
           <div class="cart__total">
             <p>
               Доставка:
-              <b v-if="deliverySelected"
-                >{{ deliveryPricePretty }} ₽</b
-              >
+              <b v-if="deliverySelected">{{ deliveryPricePretty }} ₽</b>
             </p>
             <p>
               Итого: <b>{{ products.length }}</b> товара на сумму
@@ -240,7 +198,6 @@
 </template>
 
 <script>
-// import BaseFormField from '@/components/BaseFormField.vue'
 import BaseFormText from "@/components/BaseFormText.vue";
 import BaseFormTextarea from "@/components/BaseFormTextarea.vue";
 import BasePreloader from "@/components/BasePreloader.vue";
@@ -249,7 +206,6 @@ import numberFormat from "@/helpers/numberFormat.js";
 import axios from "axios";
 import { API_BASE_URL } from "@/config.js";
 import { mapGetters } from "vuex";
-// import { mapActions } from 'vuex';
 
 export default {
   data() {
@@ -293,18 +249,18 @@ export default {
       totalPrice: "cartTotalPrice",
     }),
 
-            deliveryPricePretty() {
-      return numberFormat(this.deliveryPrice)
+    deliveryPricePretty() {
+      return numberFormat(this.deliveryPrice);
     },
-        totalPricePretty() {
-      return numberFormat(this.totalPrice)
+    totalPricePretty() {
+      return numberFormat(this.totalPrice);
     },
   },
   methods: {
-                productPricePretty(product) {
-      return numberFormat(product.price * product.quantity)
+    productPricePretty(product) {
+      return numberFormat(product.price * product.quantity);
     },
-            deliveriesPricePretty(delivery) {
+    deliveriesPricePretty(delivery) {
       return numberFormat(delivery.price);
     },
     loadDeliveries() {

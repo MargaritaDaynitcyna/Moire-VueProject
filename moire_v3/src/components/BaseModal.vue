@@ -2,11 +2,12 @@
   <Teleport v-if="modelValue" to="#teleport-target">
     <div class="teleport-blackout"></div>
     <div class="teleport-modal" @click="onOutsideClick">
-      <div
-        ref="content"
-        class="teleport-modal__content"
-      >
-        <button type="button" class="teleport-modal__close" @click.prevent="doClose">
+      <div ref="content" class="teleport-modal__content">
+        <button
+          type="button"
+          class="teleport-modal__close"
+          @click.prevent="doClose"
+        >
           X
         </button>
         <slot></slot>
@@ -22,19 +23,17 @@ export default {
   },
   methods: {
     onOutsideClick($event) {
-      console.log($event)
-      console.log($event.target)
-      console.log(this.$refs)
-      console.log(this.$refs.content)
+      console.log($event);
+      console.log($event.target);
+      console.log(this.$refs);
+      console.log(this.$refs.content);
 
-      if (
-        $event.target !== this.$refs.content
-      ) {
+      if ($event.target !== this.$refs.content) {
         this.doClose();
       }
     },
     doClose() {
-      this.$emit('update:modelValue', false);
+      this.$emit("update:modelValue", false);
     },
   },
 };
@@ -84,19 +83,19 @@ export default {
   pointer-events: none;
 }
 .teleport-modal__buttons {
-      display: flex;
-    justify-content: center;
-    align-items: stretch;
-    gap: 30px;
-    margin-top: 20px;
-    pointer-events: none;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: 30px;
+  margin-top: 20px;
+  pointer-events: none;
 }
-.teleport-modal__buttons .button{
-      pointer-events: auto
+.teleport-modal__buttons .button {
+  pointer-events: auto;
 }
 @media (max-width: 500px) {
   .teleport-modal__content {
     min-width: auto;
-  }  
+  }
 }
 </style>
