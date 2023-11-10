@@ -1,7 +1,7 @@
 <template>
     <aside class="filter">
         <button class="filter__btn" id="filterIcon" name="Фильтрация" @click.prevent="openFilters">
-           <img class="filter__icon" src="img/svg/filter.svg" alt="Иконка фильтрации">
+           <img class="filter__icon" src="/img/svg/filter.svg" alt="Иконка фильтрации">
         </button>
         <form class="filter__form form" id="filterForm" action="#" method="get" @submit.prevent="submit">
           <fieldset class="form__block">
@@ -222,7 +222,7 @@
               if(!this.filtersIsOpen) {
                 this.filtersIsOpen = true;
                 document.querySelector('.filter__form').classList.add('filter_is-open');
-                document.querySelector('.filter__icon').setAttribute('src', 'img/svg/close.svg');
+                document.querySelector('.filter__icon').setAttribute('src', '/img/svg/close.svg');
               } else {
                 this.closeFilters();
               }
@@ -230,7 +230,7 @@
             closeFilters() {
                 this.filtersIsOpen = false;
                 document.querySelector('.filter__form').classList.remove('filter_is-open');
-                document.querySelector('.filter__icon').setAttribute('src', 'img/svg/filter.svg');
+                document.querySelector('.filter__icon').setAttribute('src', '/img/svg/filter.svg');
             },
         },
         created() {

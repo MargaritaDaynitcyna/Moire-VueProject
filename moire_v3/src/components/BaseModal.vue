@@ -94,4 +94,9 @@ export default {
 .teleport-modal__buttons .button{
       pointer-events: auto
 }
+@media (max-width: 500px) {
+  .teleport-modal__content {
+    min-width: auto;
+  }  
+}
 </style>

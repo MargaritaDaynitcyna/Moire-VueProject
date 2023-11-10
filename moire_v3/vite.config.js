@@ -12,5 +12,18 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     },
-  }
+  },
+  // build: {
+  //   rollupOptions: {
+  //     external: [
+  //       'some-externally-required-library',
+  //       fileURLToPath(
+  //         new URL(
+  //           'src/img/svg/logo-moire.svg',
+  //           import.meta.url
+  //         )
+  //       ),
+  //     ]
+  //   }
+  // }
 })
