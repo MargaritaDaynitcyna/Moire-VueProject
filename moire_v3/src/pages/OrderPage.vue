@@ -333,16 +333,15 @@ export default defineComponent({
         });
     };
 
-    // created() {
     loadDeliveries();
-    // },
+    
     watch(
       deliverySelected,
       () => {
         loadPayments();
-      },
-      { immediate: true }
+      }
     );
+    
     return {
       formData,
       formError,

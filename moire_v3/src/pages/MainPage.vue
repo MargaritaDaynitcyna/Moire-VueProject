@@ -149,8 +149,7 @@ export default defineComponent({
       ],
       () => {
         loadProducts();
-      },
-      { immediate: true }
+      }
     );
 
     loadProducts();
