@@ -67,7 +67,7 @@
 import BasePlusMinus from "@/components/BasePlusMinus.vue";
 import BaseModal from "@/components/BaseModal.vue";
 import numberFormat from "@/helpers/numberFormat.js";
-import { mapActions, mapMutations } from "vuex";
+import { mapActions } from "vuex";
 
 export default {
   data() {
@@ -98,7 +98,6 @@ export default {
 
     deleteProduct(basketItemId) {
       this.isShowDeletedMessage = true;
-      console.log(basketItemId);
       this.deleteCartProduct({
         basketItemId: basketItemId,
       });

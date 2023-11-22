@@ -56,19 +56,26 @@
 <script>
 import numberFormat from "@/helpers/numberFormat.js";
 import CartItem from "@/components/CartItem.vue";
-import { mapGetters } from "vuex";
-import { defineComponent } from "vue";
+import { defineComponent, computed } from "vue";
+import { useStore } from "vuex";
 
 export default defineComponent({
   components: { CartItem },
-  computed: {
-    ...mapGetters({
-      products: "cartDetailProducts",
-      totalPrice: "cartTotalPrice",
-    }),
-    totalPricePretty() {
-      return numberFormat(this.totalPrice);
-    },
+  setup() {
+    const $store = useStore();
+
+    const products = computed(() => {
+      return $store.getters.cartDetailProducts;
+    });
+
+    const totalPricePretty = computed(() => {
+      return numberFormat($store.getters.cartTotalPrice);
+    });
+
+    return {
+      products,
+      totalPricePretty,
+    };
   },
 });
 </script>

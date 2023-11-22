@@ -244,7 +244,6 @@ export default {
       this.$emit("update:colorId", this.currentColorId);
       this.$emit("update:materialId", this.currentMaterialId);
       this.$emit("update:collectionId", this.currentCollectionId);
-      console.log(444);
       if (this.filtersIsOpen) {
         this.closeFilters();
       }

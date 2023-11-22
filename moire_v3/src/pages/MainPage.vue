@@ -71,95 +71,106 @@ import BasePreloader from "@/components/BasePreloader.vue";
 import ProductFilter from "@/components/ProductFilter.vue";
 import axios from "axios";
 import { API_BASE_URL } from "@/config.js";
+import { defineComponent, ref, computed, watch } from "vue";
 
-export default {
+export default defineComponent({
   components: { ProductList, BasePagination, ProductFilter, BasePreloader },
-  data() {
-    return {
-      filterPriceFrom: 0,
-      filterPriceTo: 0,
-      filterCategoryId: 0,
-      filterColorId: [],
-      filterMaterialId: [],
-      filterCollectionId: [],
+  setup() {
 
-      page: 1,
-      productsPerPage: 6,
 
-      productsData: null,
 
-      productsLoading: false,
-      productsLoadingFailed: false,
-    };
-  },
-  computed: {
-    products() {
-      return this.productsData
-        ? this.productsData.items.map((product) => {
+
+    const productsData = ref(null);
+
+
+    const products = computed(() => {
+      return productsData.value
+        ? productsData.value.items.map((product) => {
             return {
               ...product,
             };
           })
         : [];
-    },
-    countProducts() {
-      return this.productsData ? this.productsData.pagination.total : 0;
-    },
-  },
-  methods: {
-    loadProducts() {
-      this.productsLoading = true;
-      this.productsLoadingFailed = false;
+    });
+    const countProducts = computed(() => {
+      return productsData.value ? productsData.value.pagination.total : 0;
+    });
 
-      clearTimeout(this.loadProductsTimer);
-      this.loadProductsTimer = setTimeout(() => {
+
+
+    const page = ref(1);
+    const productsPerPage = ref(6);
+    const filterPriceFrom = ref(0);
+    const filterPriceTo = ref(0);
+    const filterCategoryId = ref(0);
+    const filterColorId = ref([]);
+    const filterMaterialId = ref([]);
+    const filterCollectionId = ref([]);
+    
+    const productsLoading = ref(false);
+    const productsLoadingFailed = ref(false);
+
+    const loadProducts = () => {
+      productsLoading.value = true;
+      productsLoadingFailed.value = false;
+
+      let loadProductsTimer;
+      clearTimeout(loadProductsTimer);
+      loadProductsTimer = setTimeout(() => {
         axios
           .get(API_BASE_URL + `/api/products`, {
             params: {
-              page: this.page,
-              limit: this.productsPerPage,
-              categoryId: this.filterCategoryId,
-              minPrice: this.filterPriceFrom,
-              maxPrice: this.filterPriceTo,
-              colorIds: this.filterColorId,
-              materialIds: this.filterMaterialId,
-              seasonIds: this.filterCollectionId,
+              page: page.value,
+              limit: productsPerPage.value,
+              categoryId: filterCategoryId.value,
+              minPrice: filterPriceFrom.value,
+              maxPrice: filterPriceTo.value,
+              colorIds: filterColorId.value,
+              materialIds: filterMaterialId.value,
+              seasonIds: filterCollectionId.value,
             },
           })
-          .then((response) => (this.productsData = response.data))
-          .catch(() => (this.productsLoadingFailed = true))
-          .then(() => (this.productsLoading = false));
+          .then((response) => (productsData.value = response.data))
+          .catch(() => (productsLoadingFailed.value = true))
+          .then(() => (productsLoading.value = false));
       }, 100);
-    },
+    };
+
+    watch(
+      [
+        page,
+        productsPerPage,
+        filterCategoryId,
+        filterPriceFrom,
+        filterPriceTo,
+        filterColorId,
+        filterMaterialId,
+        filterCollectionId,
+      ],
+      () => {
+        loadProducts();
+      },
+      { immediate: true }
+    );
+
+    loadProducts();
+
+    return {
+      filterPriceFrom,
+      filterPriceTo,
+      filterCategoryId,
+      filterColorId,
+      filterMaterialId,
+      filterCollectionId,
+      page,
+      productsPerPage,
+      productsData,
+      productsLoading,
+      productsLoadingFailed,
+      products,
+      countProducts,
+      loadProducts,
+    };
   },
-  watch: {
-    page() {
-      this.loadProducts();
-    },
-    productsPerPage() {
-      this.loadProducts();
-    },
-    filterCategoryId() {
-      this.loadProducts();
-    },
-    filterPriceFrom() {
-      this.loadProducts();
-    },
-    filterPriceTo() {
-      this.loadProducts();
-    },
-    filterColorId() {
-      this.loadProducts();
-    },
-    filterMaterialId() {
-      this.loadProducts();
-    },
-    filterCollectionId() {
-      this.loadProducts();
-    },
-  },
-  created() {
-    this.loadProducts();
-  },
-};
+});
 </script>

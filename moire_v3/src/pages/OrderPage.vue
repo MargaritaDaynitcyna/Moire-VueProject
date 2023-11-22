@@ -179,12 +179,14 @@
             </p>
           </div>
 
+          <!-- <router-link v-slot="{ navigate }" :to="{ name: 'main' }" custom> -->
           <button class="cart__button button button--primery" type="submit">
             <transition name="fade" mode="out-in">
               <span v-if="orderSending">оформляем..</span>
               <span v-else> Оформить заказ</span>
             </transition>
           </button>
+          <!-- </router-link> -->
         </div>
         <div class="cart__error form__error-block" v-if="formErrorMessage">
           <h4>Заявка не отправлена!</h4>
@@ -201,143 +203,171 @@
 import BaseFormText from "@/components/BaseFormText.vue";
 import BaseFormTextarea from "@/components/BaseFormTextarea.vue";
 import BasePreloader from "@/components/BasePreloader.vue";
-
 import numberFormat from "@/helpers/numberFormat.js";
 import axios from "axios";
 import { API_BASE_URL } from "@/config.js";
-import { mapGetters } from "vuex";
+import { computed, defineComponent, ref, watch } from "vue";
+import { useRouter } from "vue-router";
+import { useStore } from "vuex";
 
-export default {
-  data() {
-    return {
-      formData: {},
-      formError: {},
-      formErrorMessage: "",
-      deliveriesData: null,
-      paymentsData: null,
-
-      orderSending: false,
-      orderSend: false,
-
-      deliveryLoadingFailed: false,
-      deliveryLoading: false,
-
-      paymentLoadingFailed: false,
-      paymentLoading: false,
-    };
-  },
+export default defineComponent({
   components: { BaseFormText, BaseFormTextarea, BasePreloader },
-  computed: {
-    deliveries() {
-      return this.deliveriesData;
-    },
-    deliveryPrice() {
-      return this.deliverySelected
-        ? this.deliveries.find((del) => del.id === this.deliverySelected).price
+  setup() {
+    const $route = useRouter();
+    const $store = useStore();
+    const formData = ref({});
+    const formError = ref({});
+    const formErrorMessage = ref("");
+    const deliveriesData = ref(null);
+    const paymentsData = ref(null);
+
+    const orderSending = ref(false);
+    const orderSend = ref(false);
+
+    const deliveryLoadingFailed = ref(false);
+    const deliveryLoading = ref(false);
+
+    const paymentLoadingFailed = ref(false);
+    const paymentLoading = ref(false);
+
+    const deliveries = computed(() => {
+      return deliveriesData.value;
+    });
+    const deliveryPrice = computed(() => {
+      return deliverySelected.value
+        ? deliveries.value.find((del) => del.id === deliverySelected.value)
+            .price
         : "";
-    },
-    deliverySelected() {
-      return this.formData.deliveryTypeId;
-    },
-    payments() {
-      return this.paymentsData;
-    },
-    products() {
-      return this.$store.state.cartProductsData;
-    },
-    ...mapGetters({
-      totalPrice: "cartTotalPrice",
-    }),
+    });
+    const deliverySelected = computed(() => {
+      return formData.value.deliveryTypeId;
+    });
+    const payments = computed(() => {
+      return paymentsData.value;
+    });
+    const products = computed(() => {
+      return $store.state.cartProductsData;
+    });
 
-    deliveryPricePretty() {
-      return numberFormat(this.deliveryPrice);
-    },
-    totalPricePretty() {
-      return numberFormat(this.totalPrice);
-    },
-  },
-  methods: {
-    productPricePretty(product) {
+    const deliveryPricePretty = computed(() => {
+      return numberFormat(deliveryPrice.value);
+    });
+    const totalPricePretty = computed(() => {
+      return numberFormat($store.getters.cartTotalPrice);
+    });
+
+    const productPricePretty = (product) => {
       return numberFormat(product.price * product.quantity);
-    },
-    deliveriesPricePretty(delivery) {
+    };
+    const deliveriesPricePretty = (delivery) => {
       return numberFormat(delivery.price);
-    },
-    loadDeliveries() {
-      this.deliveryLoadingFailed = false;
-      this.deliveryLoading = true;
+    };
+    const loadDeliveries = () => {
+      deliveryLoadingFailed.value = false;
+      deliveryLoading.value = true;
 
-      clearTimeout(this.loadDeliveriesTimer);
-      this.loadDeliveriesTimer = setTimeout(() => {
+      let loadDeliveriesTimer;
+      clearTimeout(loadDeliveriesTimer);
+      loadDeliveriesTimer = setTimeout(() => {
         axios
           .get(API_BASE_URL + `/api/deliveries`)
           .then((response) => {
-            this.deliveriesData = response.data;
+            deliveriesData.value = response.data;
           })
-          .catch(() => (this.deliveryLoadingFailed = true))
-          .finally(() => (this.deliveryLoading = false));
+          .catch(() => (deliveryLoadingFailed.value = true))
+          .finally(() => (deliveryLoading.value = false));
       }, 100);
-    },
-    loadPayments() {
-      this.paymentLoadingFailed = false;
-      this.paymentLoading = true;
+    };
+    const loadPayments = () => {
+      paymentLoadingFailed.value = false;
+      paymentLoading.value = true;
 
-      clearTimeout(this.loadPaymentsTimer);
-      this.loadPaymentsTimer = setTimeout(() => {
+      let loadPaymentsTimer;
+      clearTimeout(loadPaymentsTimer);
+      loadPaymentsTimer = setTimeout(() => {
         axios
           .get(API_BASE_URL + `/api/payments`, {
             params: {
-              deliveryTypeId: this.formData.deliveryTypeId,
+              deliveryTypeId: formData.value.deliveryTypeId,
             },
           })
-          .then((response) => (this.paymentsData = response.data))
-          .catch(() => (this.paymentLoadingFailed = true))
-          .finally(() => (this.paymentLoading = false));
+          .then((response) => (paymentsData.value = response.data))
+          .catch(() => (paymentLoadingFailed.value = true))
+          .finally(() => (paymentLoading.value = false));
       }, 100);
-    },
-    order() {
-      this.formError = {};
-      this.formErrorMessage = "";
-      this.orderSending = true;
-      this.orderSend = false;
+    };
+
+    const order = () => {
+      formError.value = {};
+      formErrorMessage.value = "";
+      orderSending.value = true;
+      orderSend.value = false;
 
       axios
         .post(
           API_BASE_URL + `/api/orders`,
           {
-            ...this.formData,
+            ...formData.value,
           },
           {
             params: {
-              userAccessKey: this.$store.state.userAccessKey,
+              userAccessKey: $store.state.userAccessKey,
             },
           }
         )
         .then((response) => {
-          this.$store.commit("resetCart");
-          this.$store.commit("updateOrderInfo", response.data);
-          this.$router.push({
+          $store.commit("resetCart");
+          $store.commit("updateOrderInfo", response.data);
+          $route.push({
             name: "orderInfo",
             params: { id: response.data.id },
           });
-          this.orderSend = true;
+          orderSend.value = true;
         })
         .catch((error) => {
-          this.formError = error.response.data.error.request || {};
-          this.formErrorMessage = error.response.data.error.message;
+          formError.value = error.response.data.error.request || {};
+          formErrorMessage.value = error.response.data.error.message;
         })
         .finally(() => {
-          this.orderSending = false;
+          orderSending.value = false;
         });
-    },
+    };
+
+    // created() {
+    loadDeliveries();
+    // },
+    watch(
+      deliverySelected,
+      () => {
+        loadPayments();
+      },
+      { immediate: true }
+    );
+    return {
+      formData,
+      formError,
+      formErrorMessage,
+      deliveriesData,
+      paymentsData,
+      orderSending,
+      orderSend,
+      deliveryLoadingFailed,
+      deliveryLoading,
+      paymentLoadingFailed,
+      paymentLoading,
+      deliveries,
+      deliveryPrice,
+      deliverySelected,
+      payments,
+      products,
+      deliveryPricePretty,
+      totalPricePretty,
+      productPricePretty,
+      deliveriesPricePretty,
+      loadDeliveries,
+      loadPayments,
+      order,
+    };
   },
-  created() {
-    this.loadDeliveries();
-  },
-  watch: {
-    deliverySelected() {
-      this.loadPayments();
-    },
-  },
-};
+});
 </script>

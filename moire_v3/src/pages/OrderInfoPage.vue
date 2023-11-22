@@ -103,41 +103,43 @@
 <script>
 import numberFormat from "@/helpers/numberFormat.js";
 import BasePreloader from "@/components/BasePreloader.vue";
+import { defineComponent, computed } from "vue";
+import { useRoute } from "vue-router";
+import { useStore } from "vuex";
 
-export default { 
+export default defineComponent({
   components: { BasePreloader },
-  computed: {
-    orderInfo() {
-      return this.$store.state.orderInfo;
-    },
-    deliveryPricePretty() {
-      return numberFormat(this.orderInfo.deliveryType.price);
-    },
-    totalPricePretty() {
-      return numberFormat(this.orderInfo.totalPrice);
-    },
-  },
-  methods: {
-    productPricePretty(product) {
+  setup() {
+    const $route = useRoute();
+    const $store = useStore();
+
+    const orderInfo = computed(() => {
+      return $store.state.orderInfo;
+    });
+    const deliveryPricePretty = computed(() => {
+      return numberFormat(orderInfo.value.deliveryType.price);
+    });
+    const totalPricePretty = computed(() => {
+      return numberFormat(orderInfo.value.totalPrice);
+    });
+    const productPricePretty = (product) => {
       return numberFormat(product.price * product.quantity);
-    },
-  },
-  created() {
+    };
+
     if (
-      this.$store.state.orderInfo &&
-      this.$store.state.orderInfo.id === this.$route.params.id
+      $store.state.orderInfo &&
+      $store.state.orderInfo.id === $route.params.id
     ) {
       return;
+    };
+    $store.dispatch("loadOrderInfo", $route.params.id);
+
+    return {
+      orderInfo,
+      deliveryPricePretty,
+      totalPricePretty,
+      productPricePretty,
     }
-    this.$store.dispatch("loadOrderInfo", this.$route.params.id);
   },
-  watch: {
-    "$route.params.id": {
-      handler() {
-        this.$store.dispatch("loadOrderInfo", this.$route.params.id);
-      },
-      imediate: true,
-    },
-  },
-};
+});
 </script>

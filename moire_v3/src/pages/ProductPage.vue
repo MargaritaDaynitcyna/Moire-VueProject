@@ -1,8 +1,16 @@
 <template>
-  <div class="product__preloader" v-if="productLoading">
+  <div class="product__preloader" v-if="fetchStatus.isLoading">
     <BasePreloader></BasePreloader>
   </div>
-  <div v-else-if="!productData">ERROR...</div>
+  <div v-else-if="!productData" class="content container">
+    Что-то пошло не так...
+    <button
+      @click.prevent="doLoadProduct()"
+      class="filter__reset button button--second"
+    >
+      ПЕРЕЗАГРУЗИТЬ
+    </button>
+  </div>
 
   <main class="content container" v-else>
     <div class="content__top">
@@ -42,7 +50,7 @@
             class="form"
             action="#"
             method="POST"
-            @submit.prevent="addToCart"
+            @submit.prevent="doAddToCart"
           >
             <div class="item__row item__row--center">
               <BasePlusMinus v-model="productAmount" />
@@ -103,10 +111,10 @@
             <button
               class="item__button button button--primery"
               type="submit"
-              :disabled="productAddSending"
+              :disabled="isProductAddSending"
             >
               <transition name="fade" mode="out-in">
-                <span v-if="productAddSending">добавляем..</span>
+                <span v-if="isProductAddSending">добавляем..</span>
                 <span v-else>В корзину</span>
               </transition>
             </button>
@@ -183,95 +191,114 @@
 <script>
 import BasePlusMinus from "@/components/BasePlusMinus.vue";
 import BasePreloader from "@/components/BasePreloader.vue";
-
 import numberFormat from "@/helpers/numberFormat";
 import axios from "axios";
 import { API_BASE_URL } from "@/config.js";
-import { mapActions } from "vuex";
+import { defineComponent, ref, computed, reactive } from "vue";
+import { useRoute } from "vue-router";
+import { useStore } from "vuex";
 
-export default {
-  data() {
-    return {
-      productAmount: 1,
-      productSize: 0,
-      productColor: 0,
-      //? заменить на вычисляемое свойство 5.1
-      state: "info",
-      productData: null,
-      productLoading: false,
-      productLoadingFailed: false,
-
-      productAdded: false,
-      productAddSending: false,
-    };
-  },
+export default defineComponent({
   components: { BasePlusMinus, BasePreloader },
-  computed: {
-    product() {
-      return this.productData;
-    },
-    productPricePretty() {
-      return numberFormat(this.product.price);
-    },
-    category() {
-      return this.productData.category;
-    },
-    productColorId() {
-      return this.product.colors.find((color) => color.id === this.productColor)
-        .color.id;
-    },
-    srcImage() {
-      return this.product.colors.find((color) => color.id === this.productColor)
-        .gallery
-        ? this.product.colors.find((color) => color.id === this.productColor)
+  setup() {
+    const $route = useRoute();
+    const $store = useStore();
+
+    const productAmount = ref(1);
+    const productSize = ref(0);
+    const productColor = ref(0);
+    const state = ref("info");
+    const productData = ref(null);
+
+    const product = computed(() => {
+      return productData.value;
+    });
+    const productPricePretty = computed(() => {
+      return numberFormat(product.value.price);
+    });
+    const category = computed(() => {
+      return productData.value.category;
+    });
+    const productColorId = computed(() => {
+      return product.value.colors.find(
+        (color) => color.id === productColor.value
+      ).color.id;
+    });
+    const srcImage = computed(() => {
+      return product.value.colors.find(
+        (color) => color.id === productColor.value
+      ).gallery
+        ? product.value.colors.find((color) => color.id === productColor.value)
             .gallery[0].file.url
         : "";
-    },
-  },
-  methods: {
-    ...mapActions(["addProductToCart"]),
+    });
 
-    addToCart() {
-      this.productAdded = false;
-      this.productAddSending = true;
-      this.addProductToCart({
-        productId: this.product.id,
-        colorId: this.productColorId,
-        sizeId: this.productSize,
-        quantity: this.productAmount,
-      }).then(() => {
-        this.productAdded = true;
-        this.productAddSending = false;
-      });
-    },
-    loadProduct() {
-      this.productLoading = true;
-      this.productLoadingFailed = false;
+    const isProductAdded = ref(false);
+    const isProductAddSending = ref(false);
+    const doAddToCart = () => {
+      isProductAdded.value = false;
+      isProductAddSending.value = true;
+      $store
+        .dispatch("addProductToCart", {
+          productId: product.value.id,
+          colorId: productColorId.value,
+          sizeId: productSize.value,
+          quantity: productAmount.value,
+        })
+        .then(() => {
+          isProductAdded.value = true;
+          isProductAddSending.value = false;
+        });
+    };
 
-      clearTimeout(this.loadProductTimer);
-      this.loadProductTimer = setTimeout(() => {
+    const fetchStatus = reactive({
+      isLoading: false,
+      isFailed: false,
+    });
+    const doLoadProduct = () => {
+      fetchStatus.isLoading = true;
+      fetchStatus.isFailed = false;
+      let loadProductTimer;
+      clearTimeout(loadProductTimer);
+      loadProductTimer = setTimeout(() => {
         axios
-          .get(API_BASE_URL + `/api/products/${+this.$route.params.id}`)
+          .get(API_BASE_URL + `/api/products/${+$route.params.id}`)
           .then((response) => {
-            this.productData = response.data;
-            this.productSize = response.data.sizes[0].id;
-            this.productColor = response.data.colors[0].id;
+            productData.value = response.data;
+            productSize.value = response.data.sizes[0].id;
+            productColor.value = response.data.colors[0].id;
           })
-          .catch(() => (this.productLoadingFailed = true))
-          .then(() => (this.productLoading = false));
+          .catch(() => (fetchStatus.isFailed = true))
+          .then(() => (fetchStatus.isLoading = false));
       }, 100);
-    },
+    };
+
+    // watch(() => $route.fullPath, ()=> {
+    //   doLoadProduct();
+    // }, {immediate: true });
+    doLoadProduct();
+    // onBeforeRouteUpdate(()=>{
+    //   doLoadProduct();
+    // });
+
+    return {
+      productAmount,
+      productSize,
+      productColor,
+      state,
+      productData,
+      fetchStatus,
+      isProductAdded,
+      isProductAddSending,
+      product,
+      productPricePretty,
+      category,
+      productColorId,
+      srcImage,
+      doAddToCart,
+      doLoadProduct,
+    };
   },
-  created() {
-    this.loadProduct();
-  },
-  watch: {
-    "$route.params.id": {
-      handler() {
-        this.loadProduct();
-      },
-      imediate: true,
-    },
-  },
-};
+});
+
 </script>

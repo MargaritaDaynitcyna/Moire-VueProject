@@ -23,11 +23,6 @@ export default {
   },
   methods: {
     onOutsideClick($event) {
-      console.log($event);
-      console.log($event.target);
-      console.log(this.$refs);
-      console.log(this.$refs.content);
-
       if ($event.target !== this.$refs.content) {
         this.doClose();
       }
