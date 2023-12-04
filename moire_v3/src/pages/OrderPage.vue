@@ -174,7 +174,7 @@
               <b v-if="deliverySelected">{{ deliveryPricePretty }} ₽</b>
             </p>
             <p>
-              Итого: <b>{{ products.length }}</b> товара на сумму
+              Итого: <b>{{ products.length }}</b> товара/ов на сумму
               <b class="nowrap">{{ totalPricePretty }} ₽</b>
             </p>
           </div>

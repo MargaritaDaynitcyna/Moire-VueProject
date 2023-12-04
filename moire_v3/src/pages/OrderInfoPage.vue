@@ -88,7 +88,7 @@
                 <b> {{ deliveryPricePretty }} ₽</b>
               </p>
               <p>
-                Итого: <b> {{ orderInfo.basket.items.length }}</b> товара на
+                Итого: <b> {{ orderInfo.basket.items.length }}</b> товара/ов на
                 сумму
                 <b class="nowrap"> {{ totalPricePretty }} ₽</b>
               </p>
