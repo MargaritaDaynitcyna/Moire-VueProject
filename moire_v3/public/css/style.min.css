@@ -1515,6 +1515,14 @@ right: 0;
     margin-top: 15px;
 }
 
+.added-message {
+    background-color: #a9e1aba1;
+    border-radius: 30px;
+    padding: 10px;
+    width: fit-content;
+    margin-top: 15px;
+}
+
 .nowrap {
     white-space: nowrap;
 }

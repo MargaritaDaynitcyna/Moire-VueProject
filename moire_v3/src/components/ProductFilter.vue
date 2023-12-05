@@ -6,14 +6,20 @@
       name="Фильтрация"
       @click.prevent="openFilters"
     >
-      <img
+      <img v-if="!filtersIsOpen"
         class="filter__icon"
         src="/img/svg/filter.svg"
         alt="Иконка фильтрации"
       />
+      <img v-else
+        class="filter__icon"
+        src="/img/svg/close.svg"
+        alt="Иконка закрытия"
+      />
     </button>
     <form
       class="filter__form form"
+      :class="{ 'filter_is-open': filtersIsOpen }"
       id="filterForm"
       action="#"
       method="get"
@@ -181,6 +187,7 @@ export default {
     "colorId",
     "materialId",
     "collectionId",
+    "page",
   ],
   computed: {
     categories() {
@@ -244,6 +251,7 @@ export default {
       this.$emit("update:colorId", this.currentColorId);
       this.$emit("update:materialId", this.currentMaterialId);
       this.$emit("update:collectionId", this.currentCollectionId);
+      this.$emit('update:page', 1);
       if (this.filtersIsOpen) {
         this.closeFilters();
       }
@@ -255,7 +263,6 @@ export default {
       this.$emit("update:colorId", []);
       this.$emit("update:materialId", []);
       this.$emit("update:collectionId", []);
-
       if (this.filtersIsOpen) {
         this.closeFilters();
       }
@@ -283,22 +290,12 @@ export default {
     openFilters() {
       if (!this.filtersIsOpen) {
         this.filtersIsOpen = true;
-        document.querySelector(".filter__form").classList.add("filter_is-open");
-        document
-          .querySelector(".filter__icon")
-          .setAttribute("src", "/img/svg/close.svg");
       } else {
         this.closeFilters();
       }
     },
     closeFilters() {
       this.filtersIsOpen = false;
-      document
-        .querySelector(".filter__form")
-        .classList.remove("filter_is-open");
-      document
-        .querySelector(".filter__icon")
-        .setAttribute("src", "/img/svg/filter.svg");
     },
   },
   created() {

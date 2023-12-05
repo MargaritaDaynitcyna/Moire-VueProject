@@ -118,6 +118,10 @@
                 <span v-else>В корзину</span>
               </transition>
             </button>
+
+            <transition name="fade" mode="out-in">
+              <div class="added-message" v-if="isProductAdded">Товар добавлен в корзину</div>
+            </transition>
           </form>
         </div>
       </div>

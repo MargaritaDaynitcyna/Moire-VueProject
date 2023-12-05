@@ -15,6 +15,7 @@
         v-model:color-id="filterColorId"
         v-model:material-id="filterMaterialId"
         v-model:collection-id="filterCollectionId"
+        v-model:page="page"
       />
 
       <section class="catalog">
@@ -54,7 +55,7 @@
           :class="{ 'catalog--disabled': productsLoading }"
         ></ProductList>
 
-        <BasePagination
+        <BasePagination  v-if="countProducts !== 0"
           :count="countProducts"
           v-model="page"
           :per-page="productsPerPage"
@@ -77,11 +78,7 @@ export default defineComponent({
   components: { ProductList, BasePagination, ProductFilter, BasePreloader },
   setup() {
 
-
-
-
     const productsData = ref(null);
-
 
     const products = computed(() => {
       return productsData.value
@@ -95,8 +92,6 @@ export default defineComponent({
     const countProducts = computed(() => {
       return productsData.value ? productsData.value.pagination.total : 0;
     });
-
-
 
     const page = ref(1);
     const productsPerPage = ref(6);
@@ -130,16 +125,23 @@ export default defineComponent({
               seasonIds: filterCollectionId.value,
             },
           })
-          .then((response) => (productsData.value = response.data))
+          .then((response) => {(productsData.value = response.data);
+          console.log(page.value)})
           .catch(() => (productsLoadingFailed.value = true))
           .then(() => (productsLoading.value = false));
       }, 100);
     };
 
     watch(
+        productsPerPage,
+      () => {
+        page.value = 1;
+        loadProducts();
+      }
+    );
+    watch(
       [
         page,
-        productsPerPage,
         filterCategoryId,
         filterPriceFrom,
         filterPriceTo,
@@ -151,6 +153,7 @@ export default defineComponent({
         loadProducts();
       }
     );
+
 
     loadProducts();
 
