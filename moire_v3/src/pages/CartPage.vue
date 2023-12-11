@@ -42,6 +42,7 @@
             <button
               class="cart__button button button--primery"
               type="button"
+              v-show="!isCartIsEmpty"
               @click="navigate"
             >
               Оформить заказ
@@ -68,12 +69,17 @@ export default defineComponent({
       return $store.getters.cartDetailProducts;
     });
 
+    const isCartIsEmpty = computed(() => {
+      return products.value.length === 0 ? true : false;
+    });
+
     const totalPricePretty = computed(() => {
       return numberFormat($store.getters.cartTotalPrice);
     });
 
     return {
       products,
+      isCartIsEmpty,
       totalPricePretty,
     };
   },

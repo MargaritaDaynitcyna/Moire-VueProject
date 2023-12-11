@@ -150,7 +150,7 @@
         class="filter__reset button button--second"
         type="button"
         @click.prevent="reset"
-        :class="{ 'filter__reset--disabled': parametersNotApply }"
+        v-show="!parametersNotApply"
       >
         Сбросить
       </button>

@@ -125,8 +125,7 @@ export default defineComponent({
               seasonIds: filterCollectionId.value,
             },
           })
-          .then((response) => {(productsData.value = response.data);
-          console.log(page.value)})
+          .then((response) => {productsData.value = response.data})
           .catch(() => (productsLoadingFailed.value = true))
           .then(() => (productsLoading.value = false));
       }, 100);

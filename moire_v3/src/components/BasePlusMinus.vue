@@ -11,7 +11,7 @@
       </svg>
     </button>
 
-    <input type="text" v-model.number="currentAmount" />
+    <input type="number" min="1" max="99" v-model.number="currentAmount" />
 
     <button
       type="button"
